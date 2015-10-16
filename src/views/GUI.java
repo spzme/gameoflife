@@ -32,6 +32,11 @@ public class GUI extends JFrame {
 	private JTextField columnsInput;
 	private static final int ROW_BOUNDS = 150;
 	private static final int COLUMN_BOUNDS = 200;
+	// Color variables so the user has can determine the color of the cells
+	// during runtime
+	private Color aliveColor;
+	private Color deadColor;
+	private Color hasLivedColor;
 
 	/**
 	 * Launch the application.
@@ -185,10 +190,10 @@ public class GUI extends JFrame {
 					int rows = Integer.parseInt(rowsInput.getText());
 					int columns = Integer.parseInt(columnsInput.getText());
 					if (rows <= ROW_BOUNDS && columns <= COLUMN_BOUNDS) {
-						setupCells(rows, columns,
-								(Color) aliveColorComboBox.getSelectedItem(),
-								(Color) deadColorComboBox.getSelectedItem(),
-								(Color) hasLivedColorComboBox.getSelectedItem());
+						aliveColor = (Color) aliveColorComboBox.getSelectedItem();
+						deadColor = (Color) deadColorComboBox.getSelectedItem();
+						hasLivedColor = (Color) hasLivedColorComboBox.getSelectedItem();
+						setupCells(rows, columns);
 					}
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
@@ -209,15 +214,14 @@ public class GUI extends JFrame {
 		buttonPanel.add(nextButton);
 	}
 
-	private void setupCells(int rows, int columns, Color aliveColor,
-			Color deadColor, Color hasLivedColor) {
+	private void setupCells(int rows, int columns) {
 		grid.setVisible(false);
 		grid.removeAll();
 
 		// Set the vgap and hgap to -1 to reduce waste of space around cells
 		grid.setLayout(new GridLayout(rows, columns, -1, -1));
 		for (int i = 0; i < rows * columns; i++) {
-			Cell cell = new Cell(aliveColor, deadColor, hasLivedColor);
+			Cell cell = new Cell(this);
 			cell.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					cell.toggleState();
@@ -246,5 +250,17 @@ public class GUI extends JFrame {
 				c.setAlive(generation[row][column]);
 			}
 		}
+	}
+	
+	public Color getAliveColor() {
+		return aliveColor;
+	}
+	
+	public Color getDeadColor() {
+		return deadColor;
+	}
+	
+	public Color getHasLivedColor() {
+		return hasLivedColor;
 	}
 }

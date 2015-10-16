@@ -1,7 +1,5 @@
 package views;
 
-import java.awt.Color;
-
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
@@ -11,21 +9,14 @@ public class Cell extends JButton {
 	private boolean alive;
 	// A boolean to indicate if the cell has ever lived
 	private boolean hasLived;
+	private GUI gui;
 
-	// Color variables so the user has can determine the color of the cells
-	// during runtime
-	private Color aliveColor;
-	private Color deadColor;
-	private Color hasLivedColor;
-
-	public Cell(Color aliveColor, Color deadColor, Color hasLivedColor) {
+	public Cell(GUI gui) {
 		super();
-		this.aliveColor = aliveColor;
-		this.deadColor = deadColor;
-		this.hasLivedColor = hasLivedColor;
+		this.gui = gui;
 		alive = false;
 		hasLived = true;
-		this.setBackground(deadColor);
+		this.setBackground(gui.getDeadColor());
 	}
 
 	public void setAlive(boolean b) {
@@ -39,13 +30,13 @@ public class Cell extends JButton {
 	public void setAlive() {
 		alive = true;
 		hasLived = true;
-		this.setBackground(aliveColor);
+		this.setBackground(gui.getAliveColor());
 	}
 
 	public void setDead() {
 		alive = false;
 		if (hasLived()) {
-			this.setBackground(hasLivedColor);
+			this.setBackground(gui.getHasLivedColor());
 		}
 	}
 
@@ -60,9 +51,9 @@ public class Cell extends JButton {
 	public void toggleState() {
 		alive = !alive;
 		if (alive) {
-			setBackground(aliveColor);
+			setBackground(gui.getAliveColor());
 		} else {
-			setBackground(deadColor);
+			setBackground(gui.getDeadColor());
 		}
 	}
 
