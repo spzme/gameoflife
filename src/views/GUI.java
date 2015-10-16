@@ -238,5 +238,24 @@ public class GUI extends JFrame {
 		}
 		return result;
 	}
-
+	
+	public boolean[][] getCurrentGeneration() {
+		boolean[][] result = new boolean[/*ROWS*/][/*COLUMNS*/];
+		for (int row = 0; row < ROWS; row++) {
+			for (int column = 0; column < COLUMNS; column++) {
+				Cell c = (Cell) grid.getComponentAt(row, column);
+				result[row][column] = c.isAlive();
+			}
+		}
+		return result;
+	}
+	
+	public void updateGrid(boolean[][] generation) {
+		for (int row = 0; row < ROWS; row++) {
+			for (int column = 0; column < COLUMNS; column++) {
+				Cell c = (Cell) grid.getComponentAt(row, column);
+				c.setAlive(generation[row][column]);
+			}
+		}
+	}
 }
