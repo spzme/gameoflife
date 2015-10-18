@@ -1,79 +1,65 @@
 package game;
 
+import model.*;
+import views.*;
 
 public class Game {
-	Boolean[][] field;
-	int m,n;
+	private Field field;
+	private GUI gui;
+	
 	int freq; //how many generations should be computed every second?
 	long previousGenerationTime;
 	
-	public static void main(String[] args){
-		Game myGame = new Game();
-		myGame.setup();
+	public Game(Field f){
+		this.field = f;
 	}
-	
 	//Setup the game of life.
-	public void setup(){
-		m = 3;
-		n = 3;
-		freq = 2; // Two generations per second.
-		field = new Boolean[m][n];
+	public void setup(int m, int n){
+		field = new Field(m,n);
 	}
 	
-	public void runSimulation(){
-		boolean running = true;
-		while(running){
-			while(previousGenerationTime + 1000/freq < System.currentTimeMillis()){
-			//Do nothing, so that the generation is halted.
-			}
-			nextGeneration();
-			printField();
-		}
-		
-		
-	}
 	
-	public void nextGeneration(){
-		Boolean[][] newField = new Boolean[m][n];
-		for(int i =0; i<m; i++){
-			for(int j=0; j<n; j++){
+	public Field nextGeneration(){
+		Field newField = new Field(field.rows, field.columns);
+		for(int i =0; i<field.rows; i++){
+			for(int j=0; j<field.columns; j++){
 				int neighbours = 0;
 				//top row
 				if(i > 0){
 					//top mid
-					if(field[i-1][j]){
+					if(field.getAliveState(i-1, j)){
 						neighbours++;
 					}
 					//top left
-					if(j > 0 && field[i-1][j-1]){
+					if(j > 0 && field.getAliveState(i-1, j-1)){
 						neighbours++;
 					}
 					//top right
-					if(j < n-1 && field[i-1][j+1]){
+					if(j < field.columns-1 && field.getAliveState(i-1,j+1)){
 						neighbours++;
 					}
 				}
 				//mid row
 				//mid left
-				if(j > 0 && field [i][j-1]){
+				if(j > 0 && field.getAliveState(i,j-1)){
 					neighbours++;
 				}
 				//mid right
-				if (j < n-1 && field[i][j+1]){
+				if (j < field.columns-1 && field.getAliveState(i, j+1)){
 					neighbours++;
 				}
 				//bottom row
-				if(i < n-1){
+				if(i < field.rows-1){
 					//bottom mid
-					if(field[i+1][j]){
+					if(field.getAliveState(i+1,j)){
 						neighbours++;
 					}
 					//bottom left
-					if(j > 0 && field[i-1][j-1]){
+					if(j > 0 && field.getAliveState(i+1, j-1)){
 						neighbours++;
 					}
 					//bottom right
-					if(j < n - 1 && field[i-1][j+1]){
+					if(j < field.columns - 1 && field.getAliveState(i+1, j+1)){
 						neighbours++;
 					}
 					
@@ -82,31 +68,22 @@ public class Game {
 				
 				if (neighbours <= 2){
 					//Die because of underpopulation.
-					newField[i][j] = false;
+					newField.setDead(i, j);
 				}
 				if (neighbours == 2 || neighbours == 3){
 					//Live on to the next generation.
 					//Or, become alive!
-					newField[i][j]  = true;
+					newField.setAlive(i, j);
 				}
 				if (neighbours > 3){
 					//Die because of overpopulation
-					newField[i][j] = false;
+					newField.setDead(i, j);
 				}
-				
-			}
+
+			}	
 		}
+		return newField;
 		
-		
-	}
-	
-	public void printField(){
-		for(int i = 0; i<m; i++){
-			System.out.println("");
-			for(int j = 0; j<n; j++){
-				System.out.println(field[i][j]);
-			}
-		}
 	}
 	
 	

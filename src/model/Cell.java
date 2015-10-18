@@ -1,6 +1,8 @@
-package views;
+package model;
 
 import javax.swing.JButton;
+
+import views.GUI;
 
 @SuppressWarnings("serial")
 public class Cell extends JButton {
@@ -35,9 +37,7 @@ public class Cell extends JButton {
 
 	public void setDead() {
 		alive = false;
-		if (hasLived()) {
-			this.setBackground(gui.getHasLivedColor());
-		}
+		updateColor();
 	}
 
 	public boolean isAlive() {
@@ -47,11 +47,19 @@ public class Cell extends JButton {
 	public boolean hasLived() {
 		return hasLived;
 	}
-
+	
 	public void toggleState() {
+		//!Only for use by the GUI!
 		alive = !alive;
+		updateColor();
+	}
+	
+	//update representation of cell in GUI.
+	public void updateColor(){
 		if (alive) {
 			setBackground(gui.getAliveColor());
+		} else if (hasLived) {
+			setBackground(gui.getHasLivedColor());
 		} else {
 			setBackground(gui.getDeadColor());
 		}

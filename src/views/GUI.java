@@ -1,7 +1,9 @@
 package views;
 
+
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
@@ -12,6 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import game.Game;
+import model.*;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -25,11 +30,17 @@ import java.awt.FlowLayout;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
-
+	private Game game;
+	private Field field;
+	
 	private JPanel contentPane;
 	private JPanel grid;
 	private JTextField rowsInput;
 	private JTextField columnsInput;
+	private JButton generateButton;
+	private JButton startButton;
+	private JButton previousButton;
+	private JButton nextButton;
 	private static final int ROW_BOUNDS = 150;
 	private static final int COLUMN_BOUNDS = 200;
 	// Color variables so the user has can determine the color of the cells
@@ -38,8 +49,10 @@ public class GUI extends JFrame {
 	private Color deadColor;
 	private Color hasLivedColor;
 
+	private int rows;
+	private int columns;
 	/**
-	 * Launch the application.
+	 * Launch the GUI.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -181,7 +194,7 @@ public class GUI extends JFrame {
 		hasLivedColorComboBox.setPreferredSize(new Dimension(100, 20));
 		hasLivedColorPanel.add(hasLivedColorComboBox);
 
-		JButton generateButton = new JButton("Generate grid");
+		generateButton = new JButton("Generate grid");
 		controlPanel.add(generateButton);
 		this.getRootPane().setDefaultButton(generateButton);
 		generateButton.addActionListener(new ActionListener() {
@@ -203,21 +216,32 @@ public class GUI extends JFrame {
 
 		JPanel buttonPanel = new JPanel();
 		centerPanel.add(BorderLayout.SOUTH, buttonPanel);
-		JButton previousButton = new JButton("<");
+		previousButton = new JButton("<");
 		previousButton.setEnabled(false);
 		buttonPanel.add(previousButton);
-		JButton startButton = new JButton("Start");
+		startButton = new JButton("Start");
 		startButton.setEnabled(false);
+		startButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startSimulation();
+			}
+		});
 		buttonPanel.add(startButton);
-		JButton nextButton = new JButton(">");
+		nextButton = new JButton(">");
 		nextButton.setEnabled(false);
 		buttonPanel.add(nextButton);
+		
+		
 	}
 
 	private void setupCells(int rows, int columns) {
 		grid.setVisible(false);
 		grid.removeAll();
 
+		this.rows = rows;
+		this.columns = columns;
+		
 		// Set the vgap and hgap to -1 to reduce waste of space around cells
 		grid.setLayout(new GridLayout(rows, columns, -1, -1));
 		for (int i = 0; i < rows * columns; i++) {
@@ -230,27 +254,33 @@ public class GUI extends JFrame {
 			grid.add(cell);
 		}
 		grid.setVisible(true);
+		startButton.setEnabled(true);
 	}
 	
-	public boolean[][] getCurrentGeneration() {
-		boolean[][] result = new boolean[ROWS][COLUMNS];
-		for (int row = 0; row < ROWS; row++) {
-			for (int column = 0; column < COLUMNS; column++) {
-				Cell c = (Cell) grid.getComponentAt(row, column);
-				result[row][column] = c.isAlive();
+	//tell the game to start the simulation
+	public void startSimulation(){
+		System.out.println("Starting simulation now!");
+		
+		//build a Field object
+		for(int m = 0; m < this.rows; m++){
+			for (int n = 0; n < this.columns; n++){
+				Cell c = (Cell) grid.getComponentAt(m, n);
+				field.insertCellAt(m, n, c);
 			}
 		}
-		return result;
+		
+		game = new Game(field);
 	}
 	
-	public void updateGrid(boolean[][] generation) {
-		for (int row = 0; row < ROWS; row++) {
-			for (int column = 0; column < COLUMNS; column++) {
+	//update the GUI based on the generation.
+	public void newGeneration(Field field){
+		for (int row = 0; row < rows; row++) {
+			for (int column = 0; column < columns; column++) {
 				Cell c = (Cell) grid.getComponentAt(row, column);
-				c.setAlive(generation[row][column]);
+				c.setAlive(field.getAliveState(row, column));
 			}
 		}
-	}
+	}	
 	
 	public Color getAliveColor() {
 		return aliveColor;
