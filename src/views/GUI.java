@@ -3,7 +3,6 @@ package views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
@@ -12,8 +11,11 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import game.Game;
 import model.*;
@@ -41,6 +43,8 @@ public class GUI extends JFrame {
 	private JButton startButton;
 	private JButton previousButton;
 	private JButton nextButton;
+	private JLabel cellsAlive;
+	private JSlider frequencySlider;
 	private static final int ROW_BOUNDS = 150;
 	private static final int COLUMN_BOUNDS = 200;
 	// Color variables so the user has can determine the color of the cells
@@ -73,7 +77,7 @@ public class GUI extends JFrame {
 	public GUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Game of Life");
-		setBounds(100, 100, 550, 300);
+		setBounds(100, 100, 750, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -91,6 +95,7 @@ public class GUI extends JFrame {
 		// colors etc.
 		JPanel controlPanel = new JPanel();
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+		controlPanel.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
 		contentPane.add(BorderLayout.WEST, controlPanel);
 
 		JPanel rowsPanel = new JPanel();
@@ -118,12 +123,28 @@ public class GUI extends JFrame {
 		columnsPanel.add(columnsInput);
 		columnsInput.setColumns(10);
 		columnsInput.setText(String.valueOf(10));
+		
+		JLabel sliderExplanationText = new JLabel("Generations per second");
+		JPanel frequencyPanel = new JPanel();
+		FlowLayout frequencyFlowLayout = (FlowLayout) frequencyPanel.getLayout();
+		frequencyFlowLayout.setAlignment(FlowLayout.RIGHT);
+		JLabel sliderText = new JLabel("1");
+		frequencySlider = new JSlider(1, 10, 1);
+		frequencySlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				sliderText.setText(String.valueOf(frequencySlider.getValue()));
+			}
+			
+		});
+		frequencyPanel.add(frequencySlider);
+		frequencyPanel.add(sliderText);
+		controlPanel.add(sliderExplanationText);
+		controlPanel.add(frequencyPanel);
+		
 
-		JPanel colorExplanationPanel = new JPanel();
-		JLabel colorExplanationText = new JLabel(
-				"Choose colors to represent the state of the cells");
-		colorExplanationPanel.add(colorExplanationText);
-		controlPanel.add(colorExplanationPanel);
+		JLabel colorExplanationText = new JLabel("Choose colors to represent the state of the cells");
+		controlPanel.add(colorExplanationText);
 
 		JPanel aliveColorPanel = new JPanel();
 		FlowLayout flowLayout_3 = (FlowLayout) aliveColorPanel.getLayout();
@@ -207,6 +228,7 @@ public class GUI extends JFrame {
 						deadColor = (Color) deadColorComboBox.getSelectedItem();
 						hasLivedColor = (Color) hasLivedColorComboBox.getSelectedItem();
 						setupCells(rows, columns);
+						getRootPane().setDefaultButton(startButton);
 					}
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
@@ -218,6 +240,13 @@ public class GUI extends JFrame {
 		centerPanel.add(BorderLayout.SOUTH, buttonPanel);
 		previousButton = new JButton("<");
 		previousButton.setEnabled(false);
+		previousButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+				// Ash game for previous generation
+			}
+		});
 		buttonPanel.add(previousButton);
 		startButton = new JButton("Start");
 		startButton.setEnabled(false);
@@ -225,14 +254,52 @@ public class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				startSimulation();
+				startButton.setText("Stop");
+				nextButton.setEnabled(false);
+				previousButton.setEnabled(false);
+				// TODO
+				// determine if the game is on automatic or if stop is issued so the player can look at generations step by step
+				// if stop is pressed, the next and previous button should be enabled
+				//startButton.setText("Start");
+				//nextButton.setEnabled(true);
+				//nextButton.setEnabled(true);
 			}
 		});
 		buttonPanel.add(startButton);
 		nextButton = new JButton(">");
+		nextButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+				// Ask game for next generation
+			}
+		});
 		nextButton.setEnabled(false);
+		
 		buttonPanel.add(nextButton);
 		
+		cellsAlive = new JLabel();
+		buttonPanel.add(cellsAlive);
 		
+		
+		
+		
+		// TEMPORARY BUTTONS TO SIMULATE THE GYRO SENSOR
+		JPanel gyroPanel = new JPanel();
+		JLabel gyroText = new JLabel("Simulate gyro sensor");
+		gyroPanel.add(gyroText);
+		gyroPanel.setLayout(new BoxLayout(gyroPanel, BoxLayout.Y_AXIS));
+		contentPane.add(BorderLayout.EAST, gyroPanel);
+		
+		JButton shakeButton = new JButton("Shake");
+		gyroPanel.add(shakeButton);
+		JPanel tiltPanel = new JPanel();
+		JTextField tiltValue = new JTextField();
+		tiltPanel.add(tiltValue);
+		JLabel tiltText = new JLabel("degrees");
+		tiltPanel.add(tiltText);
+		tiltValue.setColumns(10);
+		gyroPanel.add(tiltPanel);
 	}
 
 	private void setupCells(int rows, int columns) {
@@ -270,16 +337,23 @@ public class GUI extends JFrame {
 		}
 		
 		game = new Game(field);
+		game.setFrequency(frequencySlider.getValue());
 	}
 	
 	//update the GUI based on the generation.
 	public void newGeneration(Field field){
+		int cellsAlive = 0;
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
 				Cell c = (Cell) grid.getComponentAt(row, column);
-				c.setAlive(field.getAliveState(row, column));
+				boolean alive = field.getAliveState(row, column);
+				if (alive) {
+					cellsAlive++;
+				}
+				c.setAlive(alive);
 			}
 		}
+		this.cellsAlive.setText(cellsAlive + " cells alive");
 	}	
 	
 	public Color getAliveColor() {
@@ -293,4 +367,5 @@ public class GUI extends JFrame {
 	public Color getHasLivedColor() {
 		return hasLivedColor;
 	}
+	
 }

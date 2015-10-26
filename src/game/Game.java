@@ -7,8 +7,8 @@ public class Game {
 	private Field field;
 	private GUI gui;
 	
-	int freq; //how many generations should be computed every second?
-	long previousGenerationTime;
+	private int freq; //how many generations should be computed every second?
+	private long previousGenerationTime;
 	
 	public Game(Field f){
 		this.field = f;
@@ -86,6 +86,9 @@ public class Game {
 		
 	}
 	
+	public void setFrequency(int frequency) {
+		freq = frequency;
+	}
 	
 }
 
