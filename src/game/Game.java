@@ -17,8 +17,8 @@ public class Game {
 
 	public Field nextGeneration() {
 		Field newField = new Field(field.getRows(), field.getColumns());
-		for (int i = 0; i < field.rows; i++) {
-			for (int j = 0; j < field.columns; j++) {
+		for (int i = 0; i < field.getRows(); i++) {
+			for (int j = 0; j < field.getColumns(); j++) {
 				int neighbours = 0;
 				// top row
 				if (i > 0) {
@@ -31,7 +31,7 @@ public class Game {
 						neighbours++;
 					}
 					// top right
-					if (j < field.columns - 1
+					if (j < field.getColumns() - 1
 							&& field.getAliveState(i - 1, j + 1)) {
 						neighbours++;
 					}
@@ -42,11 +42,11 @@ public class Game {
 					neighbours++;
 				}
 				// mid right
-				if (j < field.columns - 1 && field.getAliveState(i, j + 1)) {
+				if (j < field.getColumns() - 1 && field.getAliveState(i, j + 1)) {
 					neighbours++;
 				}
 				// bottom row
-				if (i < field.rows - 1) {
+				if (i < field.getRows() - 1) {
 					// bottom mid
 					if (field.getAliveState(i + 1, j)) {
 						neighbours++;
@@ -56,7 +56,7 @@ public class Game {
 						neighbours++;
 					}
 					// bottom right
-					if (j < field.columns - 1
+					if (j < field.getColumns() - 1
 							&& field.getAliveState(i + 1, j + 1)) {
 						neighbours++;
 					}

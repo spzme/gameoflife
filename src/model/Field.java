@@ -2,8 +2,8 @@ package model;
 
 public class Field {
 	private boolean[][] cells;
-	public int rows;
-	public int columns;
+	private int rows;
+	private int columns;
 	
 	public Field(int rows, int columns) {
 		this.rows = rows;
