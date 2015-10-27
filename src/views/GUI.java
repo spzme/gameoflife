@@ -77,7 +77,7 @@ public class GUI extends JFrame {
 	public GUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Game of Life");
-		setBounds(100, 100, 750, 300);
+		setBounds(100, 100, 900, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
