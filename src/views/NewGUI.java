@@ -227,7 +227,7 @@ public class NewGUI extends JFrame {
 		previousButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				nextGeneration();
+				previousGeneration();
 			}
 		});
 		startButton = new JButton("Start");
@@ -241,7 +241,7 @@ public class NewGUI extends JFrame {
 		nextButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				previousGeneration();
+				nextGeneration();
 			}
 		});
 		buttonPanel.add(previousButton);
