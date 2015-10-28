@@ -29,6 +29,7 @@ import utils.CellColors;
 
 @SuppressWarnings("serial")
 public class NewGUI extends JFrame {
+	private Thread generatingThread;
 	private Game game;
 	// Color variables so the user has can determine the color of the cells
 	// during runtime
@@ -132,13 +133,12 @@ public class NewGUI extends JFrame {
 		speedSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
 		horizontalBox.add(speedSlider);
 		speedSlider.setMinimum(1);
-		speedSlider.setMaximum(10);
+		speedSlider.setMaximum(50);
 		speedSlider.setValue(1);
 		speedSlider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				speedLabel.setText(String.valueOf(speedSlider
-						.getValue()));
+				speedLabel.setText(String.valueOf(speedSlider.getValue()));
 			}
 		});
 
@@ -224,32 +224,37 @@ public class NewGUI extends JFrame {
 		verticalBox.add(btnGenerateGrid);
 		JPanel buttonPanel = new JPanel();
 		previousButton = new JButton("<");
-		previousButton.addActionListener(new ActionListener(){
+		previousButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				nextGeneration();
+				previousGeneration();
 			}
 		});
 		startButton = new JButton("Start");
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				startGame();
+				if (generatingThread == null) {
+					startGame();
+				} else {
+					stopGame();
+				}
 			}
 		});
 		nextButton = new JButton(">");
 		nextButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				previousGeneration();
+				nextGeneration();
 			}
 		});
 		buttonPanel.add(previousButton);
 		buttonPanel.add(startButton);
 		buttonPanel.add(nextButton);
 		contentPane.add(buttonPanel, BorderLayout.SOUTH);
-		
-		lblCellsAlive = new JLabel("");
+
+		lblCellsAlive = new JLabel();
+		displayCellsAlive(0);
 		buttonPanel.add(lblCellsAlive);
 
 		this.pack();
@@ -257,6 +262,7 @@ public class NewGUI extends JFrame {
 	}
 
 	private void generateField() {
+		stopGame();
 		try {
 			int rows = Integer.parseInt(rowInput.getText());
 			int columns = Integer.parseInt(columnInput.getText());
@@ -281,8 +287,8 @@ public class NewGUI extends JFrame {
 						cell.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								cell.toggleState();
-								game.getField().setAlive(xx, yy, cell.isAlive());
-								game.getField().printField();
+								game.getField()
+										.setAlive(xx, yy, cell.isAlive());
 							}
 						});
 						grid.add(cell);
@@ -298,29 +304,42 @@ public class NewGUI extends JFrame {
 		startButton.setEnabled(true);
 	}
 
-	private void startGame() {
-		//Run the simulation, so, run the nextGeneration command many times.
-		int speed = speedSlider.getValue();
-		float timeToWait = 1000/speed;
-		long previousSimulationTime = System.currentTimeMillis();
-		boolean running = true;
-		while(running){
-			while(previousSimulationTime + timeToWait < System.currentTimeMillis()){
-			//wait	
-			}
-		nextGeneration();
-		}
-	}
-		
-	
-	private void nextGeneration(){
+	private void nextGeneration() {
 		game.nextGeneration();
 		updateGrid(game.getField());
 	}
-	
-	private void previousGeneration(){
+
+	private void previousGeneration() {
 		game.previousGeneration();
 		updateGrid(game.getField());
+	}
+
+	private void startGame() {
+		startButton.setText("Stop");
+		int speed = speedSlider.getValue();
+		long timeToWait = 1000 / speed;
+		generatingThread = new Thread() {
+			public void run() {
+				try {
+					while (true) {
+						Thread.sleep(timeToWait);
+						nextGeneration();
+					}
+				} catch (InterruptedException e) {
+					// Do nothing
+				}
+			}
+		};
+		generatingThread.start();
+	}
+
+	private void stopGame() {
+		startButton.setText("Start");
+		displayCellsAlive(0);
+		if (generatingThread != null) {
+			generatingThread.interrupt();
+			generatingThread = null;
+		}
 	}
 
 	public Color getAliveColor() {
@@ -334,20 +353,25 @@ public class NewGUI extends JFrame {
 	public Color getHasLivedColor() {
 		return hasLivedColor;
 	}
-	
-	//update the GUI based on the generation.
-	private void updateGrid(Field field){
+
+	// update the GUI based on the generation.
+	private void updateGrid(Field field) {
 		int cellsAlive = 0;
 		Component[] components = grid.getComponents();
-		for(int i =0; i < game.getField().getRowCount() * game.getField().getColumnCount(); i++){
+		for (int i = 0; i < game.getField().getRowCount()
+				* game.getField().getColumnCount(); i++) {
 			Cell c = (Cell) components[i];
-			int x = Math.floorDiv(i, game.getField().getRowCount());
-			int y = i % game.getField().getColumnCount();
-			if(field.getAliveState(x, y)){
+			int y = Math.floorDiv(i, game.getField().getRowCount());
+			int x = i % game.getField().getColumnCount();
+			if (field.getAliveState(x, y)) {
 				cellsAlive++;
 			}
-			c.setAlive(field.getAliveState(x,y));
+			c.setAlive(field.getAliveState(x, y));
 		}
-		this.lblCellsAlive.setText(cellsAlive + " cells alive");
+		displayCellsAlive(cellsAlive);
+	}
+	
+	private void displayCellsAlive(int cellsAlive) {
+		lblCellsAlive.setText(String.valueOf(cellsAlive) + " cells alive");
 	}
 }

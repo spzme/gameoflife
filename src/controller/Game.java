@@ -63,7 +63,7 @@ public class Game {
 				// The amount of alive neighbours is determined now, determine
 				// alive state of cell.
 
-				if (neighbours <= 2) {
+				if (neighbours < 2) {
 					// Die because of underpopulation.
 					newField.setDead(i, j);
 				}
@@ -72,7 +72,7 @@ public class Game {
 					// Or, become alive!
 					newField.setAlive(i, j);
 				}
-				if (neighbours == 2 && newField.getAliveState(i, j)) {
+				if (neighbours == 2 && field.getAliveState(i, j)) {
 					// Live on to the next generation
 					newField.setAlive(i, j);
 				}
