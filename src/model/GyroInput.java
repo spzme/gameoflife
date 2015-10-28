@@ -2,7 +2,12 @@ package model;
 
 //To model the gyro input
 public class GyroInput {
-	//I dont yet know what fields to expect here...
+	//The fields that have to be stored here
+	//are dependant on the type of gyro sensor we use,
+	//so, this probably is not complete.
+	float accX; //Acceleration in X direction, m/s^2
+	float accY; //Acceleration in Y direction, m/s^2
+	float accZ; //Acceleration in Z direction, m/s^2
 	
 	
 }

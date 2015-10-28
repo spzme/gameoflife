@@ -48,8 +48,8 @@ public class NewGUI extends JFrame {
 	private JPanel grid;
 	private JTextField rowInput;
 	private JTextField columnInput;
-	private JSlider frequencySlider;
-	private JLabel frequencyLabel;
+	private JSlider speedSlider;
+	private JLabel speedLabel;
 	private JLabel cellsAliveLabel;
 
 	private static final int ROW_BOUNDS = 100;
@@ -121,29 +121,29 @@ public class NewGUI extends JFrame {
 		Component verticalStrut_1 = Box.createVerticalStrut(10);
 		verticalBox.add(verticalStrut_1);
 
-		JLabel lblFrequency = new JLabel("Frequency");
-		verticalBox.add(lblFrequency);
+		JLabel lblSpeed = new JLabel("Speed");
+		verticalBox.add(lblSpeed);
 
 		Box horizontalBox = Box.createHorizontalBox();
 		horizontalBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		verticalBox.add(horizontalBox);
 
-		frequencySlider = new JSlider();
-		frequencySlider.setAlignmentX(Component.LEFT_ALIGNMENT);
-		horizontalBox.add(frequencySlider);
-		frequencySlider.setMinimum(1);
-		frequencySlider.setMaximum(10);
-		frequencySlider.setValue(1);
-		frequencySlider.addChangeListener(new ChangeListener() {
+		speedSlider = new JSlider();
+		speedSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
+		horizontalBox.add(speedSlider);
+		speedSlider.setMinimum(1);
+		speedSlider.setMaximum(10);
+		speedSlider.setValue(1);
+		speedSlider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				frequencyLabel.setText(String.valueOf(frequencySlider
+				speedLabel.setText(String.valueOf(speedSlider
 						.getValue()));
 			}
 		});
 
-		frequencyLabel = new JLabel("1");
-		horizontalBox.add(frequencyLabel);
+		speedLabel = new JLabel("1");
+		horizontalBox.add(speedLabel);
 
 		Component verticalStrut_2 = Box.createVerticalStrut(10);
 		verticalBox.add(verticalStrut_2);
@@ -300,8 +300,8 @@ public class NewGUI extends JFrame {
 
 	private void startGame() {
 		//Run the simulation, so, run the nextGeneration command many times.
-		int frequency = frequencySlider.getValue();
-		float timeToWait = 1000/frequency;
+		int speed = speedSlider.getValue();
+		float timeToWait = 1000/speed;
 		long previousSimulationTime = System.currentTimeMillis();
 		boolean running = true;
 		while(running){
