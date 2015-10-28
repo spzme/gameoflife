@@ -67,9 +67,13 @@ public class Game {
 					// Die because of underpopulation.
 					newField.setDead(i, j);
 				}
-				if (neighbours == 2 || neighbours == 3) {
+				if (neighbours == 3) {
 					// Live on to the next generation.
 					// Or, become alive!
+					newField.setAlive(i, j);
+				}
+				if (neighbours == 2 && newField.getAliveState(i, j)) {
+					// Live on to the next generation
 					newField.setAlive(i, j);
 				}
 				if (neighbours > 3) {

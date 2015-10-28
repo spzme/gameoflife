@@ -15,7 +15,7 @@ public class Field {
 		this.newGUI = newGUI;
 		for(int m=0; m < rows; m++){
 			for(int n=0; n < columns; n++){
-				cells[m][n] = new Cell(newGUI);
+				cells[n][m] = new Cell(newGUI);
 			}
 		}
 	}
