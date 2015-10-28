@@ -51,7 +51,9 @@ public class NewGUI extends JFrame {
 	private JTextField columnInput;
 	private JSlider speedSlider;
 	private JLabel speedLabel;
+
 	private JLabel lblCellsAlive;
+	private JLabel lblGenerationCounter;
 
 	private static final int ROW_BOUNDS = 100;
 	private static final int COLUMN_BOUNDS = 100;
@@ -62,12 +64,8 @@ public class NewGUI extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					NewGUI frame = new NewGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				NewGUI frame = new NewGUI();
+				frame.setVisible(true);
 			}
 		});
 	}
@@ -248,6 +246,9 @@ public class NewGUI extends JFrame {
 				nextGeneration();
 			}
 		});
+
+		lblGenerationCounter = new JLabel("Generation 0");
+		buttonPanel.add(lblGenerationCounter);
 		buttonPanel.add(previousButton);
 		buttonPanel.add(startButton);
 		buttonPanel.add(nextButton);
@@ -305,13 +306,13 @@ public class NewGUI extends JFrame {
 	}
 
 	private void nextGeneration() {
-		game.nextGeneration();
-		updateGrid(game.getField());
+		displayGenerationCount();
+		updateGrid(game.nextGeneration());
 	}
 
 	private void previousGeneration() {
-		game.previousGeneration();
-		updateGrid(game.getField());
+		displayGenerationCount();
+		updateGrid(game.previousGeneration());
 	}
 
 	private void startGame() {
@@ -337,6 +338,7 @@ public class NewGUI extends JFrame {
 		startButton.setText("Start");
 		displayCellsAlive(0);
 		if (generatingThread != null) {
+			displayGenerationCount();
 			generatingThread.interrupt();
 			generatingThread = null;
 		}
@@ -370,8 +372,12 @@ public class NewGUI extends JFrame {
 		}
 		displayCellsAlive(cellsAlive);
 	}
-	
+
 	private void displayCellsAlive(int cellsAlive) {
 		lblCellsAlive.setText(String.valueOf(cellsAlive) + " cells alive");
+	}
+
+	private void displayGenerationCount() {
+		lblGenerationCounter.setText("Generation " + game.getGenerationCount());
 	}
 }

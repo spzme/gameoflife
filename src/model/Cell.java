@@ -50,11 +50,14 @@ public class Cell extends JButton {
 	
 	public void toggleState() {
 		//!Only for use by the GUI!
-		alive = !alive;
 		if (alive) {
-			setBackground(gui.getAliveColor());
-		} else {
+			alive = false;
+			hasLived = false;
 			setBackground(gui.getDeadColor());
+		} else {
+			alive = true;
+			hasLived = true;
+			setBackground(gui.getAliveColor());
 		}
 	}
 	

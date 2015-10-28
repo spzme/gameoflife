@@ -5,15 +5,18 @@ import model.*;
 public class Game {
 	private Field field;
 	private Field previousField;
+	private int generationCount;
 	
 	public Game(Field field) {
 		this.field = field;
 		previousField = field;
+		generationCount = 1;
 	}
 
-	public void nextGeneration() {
+	public Field nextGeneration() {
+		generationCount++;
 		previousField = field;
-		Field newField = new Field(field.getRowCount(), field.getColumnCount(),  field.getGUI());
+		Field newField = new Field(field.getRowCount(), field.getColumnCount(), field.getGUI());
 		for (int i = 0; i < field.getRowCount(); i++) {
 			for (int j = 0; j < field.getColumnCount(); j++) {
 				newField.insertCellAt(i, j, new Cell(field.getGUI()));
@@ -84,14 +87,21 @@ public class Game {
 			}
 		}
 		field = newField;
+		return field;
 	}
 
-	public void previousGeneration(){
-		field =  previousField;
+	public Field previousGeneration() {
+		generationCount--;
+		field = previousField;
+		return field;
 	}
 	
 	public Field getField() {
 		return field;
+	}
+	
+	public int getGenerationCount() {
+		return generationCount;
 	}
 
 }
