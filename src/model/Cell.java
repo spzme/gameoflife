@@ -17,7 +17,7 @@ public class Cell extends JButton {
 		super();
 		this.gui = newGUI;
 		alive = false;
-		hasLived = true;
+		hasLived = false;
 		setBackground(gui.getDeadColor());
 	}
 

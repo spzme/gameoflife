@@ -50,7 +50,7 @@ public class NewGUI extends JFrame {
 	private JTextField columnInput;
 	private JSlider speedSlider;
 	private JLabel speedLabel;
-	private JLabel cellsAliveLabel;
+	private JLabel lblCellsAlive;
 
 	private static final int ROW_BOUNDS = 100;
 	private static final int COLUMN_BOUNDS = 100;
@@ -162,7 +162,7 @@ public class NewGUI extends JFrame {
 			}
 		});
 
-		cellsAliveLabel = new JLabel("Color when cell is alive");
+		JLabel cellsAliveLabel = new JLabel("Color when cell is alive");
 		verticalBox.add(cellsAliveLabel);
 		verticalBox.add(aliveColorBox);
 
@@ -227,7 +227,7 @@ public class NewGUI extends JFrame {
 		previousButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				previousGeneration();
+				nextGeneration();
 			}
 		});
 		startButton = new JButton("Start");
@@ -241,7 +241,7 @@ public class NewGUI extends JFrame {
 		nextButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				nextGeneration();
+				previousGeneration();
 			}
 		});
 		buttonPanel.add(previousButton);
@@ -249,8 +249,8 @@ public class NewGUI extends JFrame {
 		buttonPanel.add(nextButton);
 		contentPane.add(buttonPanel, BorderLayout.SOUTH);
 		
-		JLabel lblNewLabel = new JLabel("");
-		buttonPanel.add(lblNewLabel);
+		lblCellsAlive = new JLabel("");
+		buttonPanel.add(lblCellsAlive);
 
 		this.pack();
 		this.setLocationRelativeTo(null);
@@ -348,6 +348,6 @@ public class NewGUI extends JFrame {
 			}
 			c.setAlive(field.getAliveState(x,y));
 		}
-		this.cellsAliveLabel.setText(cellsAlive + " cells alive");
+		this.lblCellsAlive.setText(cellsAlive + " cells alive");
 	}
 }
