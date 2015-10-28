@@ -268,7 +268,7 @@ public class NewGUI extends JFrame {
 				grid.setVisible(false);
 				grid.removeAll();
 
-				game = new Game(new Field(rows, columns));
+				game = new Game(new Field(rows, columns, this));
 
 				// Set the vgap and hgap to -1 to reduce waste of space around
 				// cells
@@ -338,15 +338,15 @@ public class NewGUI extends JFrame {
 	//update the GUI based on the generation.
 	private void updateGrid(Field field){
 		int cellsAlive = 0;
-		for (int row = 0; row < game.getField().getRowCount(); row++) {
-			for (int column = 0; column < game.getField().getColumnCount(); column++) {
-				Cell c = (Cell) grid.getComponentAt(row, column);
-				boolean alive = field.getAliveState(row, column);
-				if (alive) {
-					cellsAlive++;
-				}
-				c.setAlive(alive);
+		Component[] components = grid.getComponents();
+		for(int i =0; i < game.getField().getRowCount() * game.getField().getColumnCount(); i++){
+			Cell c = (Cell) components[i];
+			int x = Math.floorDiv(i, game.getField().getRowCount());
+			int y = i % game.getField().getColumnCount();
+			if(field.getAliveState(x, y)){
+				cellsAlive++;
 			}
+			c.setAlive(field.getAliveState(x,y));
 		}
 		this.cellsAliveLabel.setText(cellsAlive + " cells alive");
 	}

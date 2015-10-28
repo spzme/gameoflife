@@ -8,13 +8,15 @@ public class Game {
 	
 	public Game(Field field) {
 		this.field = field;
+		previousField = field;
 	}
 
 	public void nextGeneration() {
 		previousField = field;
-		Field newField = new Field(field.getRowCount(), field.getColumnCount());
+		Field newField = new Field(field.getRowCount(), field.getColumnCount(),  field.getGUI());
 		for (int i = 0; i < field.getRowCount(); i++) {
 			for (int j = 0; j < field.getColumnCount(); j++) {
+				newField.insertCellAt(i, j, new Cell(field.getGUI()));
 				int neighbours = 0;
 				// top row
 				if (i > 0) {
