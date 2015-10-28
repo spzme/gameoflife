@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import game.Game;
+import controller.Game;
 import model.*;
 
 import java.awt.GridLayout;

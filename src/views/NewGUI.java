@@ -1,6 +1,6 @@
 package views;
 
-import game.Game;
+import controller.Game;
 
 import java.awt.EventQueue;
 import java.awt.BorderLayout;
@@ -224,6 +224,12 @@ public class NewGUI extends JFrame {
 		verticalBox.add(btnGenerateGrid);
 		JPanel buttonPanel = new JPanel();
 		previousButton = new JButton("<");
+		previousButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				nextGeneration();
+			}
+		});
 		startButton = new JButton("Start");
 		startButton.addActionListener(new ActionListener() {
 			@Override
@@ -235,7 +241,7 @@ public class NewGUI extends JFrame {
 		nextButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateGrid(game.nextGeneration());
+				previousGeneration();
 			}
 		});
 		buttonPanel.add(previousButton);
@@ -262,7 +268,7 @@ public class NewGUI extends JFrame {
 				grid.setVisible(false);
 				grid.removeAll();
 
-				game = new Game(this, new Field(rows, columns));
+				game = new Game(new Field(rows, columns));
 
 				// Set the vgap and hgap to -1 to reduce waste of space around
 				// cells
@@ -293,7 +299,28 @@ public class NewGUI extends JFrame {
 	}
 
 	private void startGame() {
-		// TODO
+		//Run the simulation, so, run the nextGeneration command many times.
+		int frequency = frequencySlider.getValue();
+		float timeToWait = 1000/frequency;
+		long previousSimulationTime = System.currentTimeMillis();
+		boolean running = true;
+		while(running){
+			while(previousSimulationTime + timeToWait < System.currentTimeMillis()){
+			//wait	
+			}
+		nextGeneration();
+		}
+	}
+		
+	
+	private void nextGeneration(){
+		game.nextGeneration();
+		updateGrid(game.getField());
+	}
+	
+	private void previousGeneration(){
+		game.previousGeneration();
+		updateGrid(game.getField());
 	}
 
 	public Color getAliveColor() {
@@ -311,8 +338,8 @@ public class NewGUI extends JFrame {
 	//update the GUI based on the generation.
 	private void updateGrid(Field field){
 		int cellsAlive = 0;
-		for (int row = 0; row < game.getField().getRows(); row++) {
-			for (int column = 0; column < game.getField().getColumns(); column++) {
+		for (int row = 0; row < game.getField().getRowCount(); row++) {
+			for (int column = 0; column < game.getField().getColumnCount(); column++) {
 				Cell c = (Cell) grid.getComponentAt(row, column);
 				boolean alive = field.getAliveState(row, column);
 				if (alive) {

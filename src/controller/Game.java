@@ -1,24 +1,20 @@
-package game;
+package controller;
 
 import model.*;
-import views.*;
 
 public class Game {
 	private Field field;
-	private NewGUI gui;
-
-	private int freq; // how many generations should be computed every second?
-	private long previousGenerationTime;
-
-	public Game(NewGUI gui, Field field) {
-		this.gui = gui;
+	private Field previousField;
+	
+	public Game(Field field) {
 		this.field = field;
 	}
 
-	public Field nextGeneration() {
-		Field newField = new Field(field.getRows(), field.getColumns());
-		for (int i = 0; i < field.getRows(); i++) {
-			for (int j = 0; j < field.getColumns(); j++) {
+	public void nextGeneration() {
+		previousField = field;
+		Field newField = new Field(field.getRowCount(), field.getColumnCount());
+		for (int i = 0; i < field.getRowCount(); i++) {
+			for (int j = 0; j < field.getColumnCount(); j++) {
 				int neighbours = 0;
 				// top row
 				if (i > 0) {
@@ -31,7 +27,7 @@ public class Game {
 						neighbours++;
 					}
 					// top right
-					if (j < field.getColumns() - 1
+					if (j < field.getColumnCount() - 1
 							&& field.getAliveState(i - 1, j + 1)) {
 						neighbours++;
 					}
@@ -42,11 +38,11 @@ public class Game {
 					neighbours++;
 				}
 				// mid right
-				if (j < field.getColumns() - 1 && field.getAliveState(i, j + 1)) {
+				if (j < field.getColumnCount() - 1 && field.getAliveState(i, j + 1)) {
 					neighbours++;
 				}
 				// bottom row
-				if (i < field.getRows() - 1) {
+				if (i < field.getRowCount() - 1) {
 					// bottom mid
 					if (field.getAliveState(i + 1, j)) {
 						neighbours++;
@@ -56,7 +52,7 @@ public class Game {
 						neighbours++;
 					}
 					// bottom right
-					if (j < field.getColumns() - 1
+					if (j < field.getColumnCount() - 1
 							&& field.getAliveState(i + 1, j + 1)) {
 						neighbours++;
 					}
@@ -82,12 +78,10 @@ public class Game {
 			}
 		}
 		field = newField;
-		return newField;
-
 	}
 
-	public void setFrequency(int frequency) {
-		freq = frequency;
+	public void previousGeneration(){
+		field =  previousField;
 	}
 	
 	public Field getField() {
