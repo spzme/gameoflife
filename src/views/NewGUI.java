@@ -24,13 +24,14 @@ import javax.swing.event.ChangeListener;
 
 import model.Cell;
 import model.Field;
-
+import model.Tuple;
 import utils.CellColors;
 
 @SuppressWarnings("serial")
 public class NewGUI extends JFrame {
 	private Thread generatingThread;
 	private Game game;
+	private Cell[][] cells;
 	// Color variables so the user has can determine the color of the cells
 	// during runtime
 	private Color aliveColor;
@@ -276,23 +277,23 @@ public class NewGUI extends JFrame {
 				grid.removeAll();
 
 				game = new Game(new Field(rows, columns, this));
-
+				cells = new Cell[rows][columns];
 				// Set the vgap and hgap to -1 to reduce waste of space around
 				// cells
 				grid.setLayout(new GridLayout(rows, columns, -1, -1));
 				for (int row = 0; row < rows; row++) {
 					for (int column = 0; column < columns; column++) {
-						int xx = column;
-						int yy = row;
-						Cell cell = new Cell(this);
-						cell.addActionListener(new ActionListener() {
+						int xx = row;
+						int yy = column;
+						cells[xx][yy] = new Cell(this);
+						cells[xx][yy].addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
-								cell.toggleState();
-								game.getField()
-										.setAlive(xx, yy, cell.isAlive());
+								cells[xx][yy].toggleState();
+								cells[xx][yy].setAlive(cells[xx][yy].isAlive());
+								game.getField().setAlive(xx, yy, cells[xx][yy].isAlive());
 							}
 						});
-						grid.add(cell);
+						grid.add(cells[xx][yy]);
 					}
 				}
 				grid.setVisible(true);
@@ -358,17 +359,9 @@ public class NewGUI extends JFrame {
 
 	// update the GUI based on the generation.
 	private void updateGrid(Field field) {
-		int cellsAlive = 0;
-		Component[] components = grid.getComponents();
-		for (int i = 0; i < game.getField().getRowCount()
-				* game.getField().getColumnCount(); i++) {
-			Cell c = (Cell) components[i];
-			int y = Math.floorDiv(i, game.getField().getRowCount());
-			int x = i % game.getField().getColumnCount();
-			if (field.getAliveState(x, y)) {
-				cellsAlive++;
-			}
-			c.setAlive(field.getAliveState(x, y));
+		int cellsAlive = field.getAliveCellCount();
+		for(Tuple t : game.getDifferences()){
+			cells[t.x][t.y].setAlive(field.getAliveState(t.x, t.y));
 		}
 		displayCellsAlive(cellsAlive);
 	}
