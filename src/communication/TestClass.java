@@ -1,27 +1,39 @@
 package communication;
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.RaspiPin;
 
 public class TestClass {
 
-	public static void main(String[] args) {
-		// TODO code application logic here
+	public static void main(String[] args) throws PinException {
 
-		final GpioController gpio = GpioFactory.getInstance();
-
-		// GPIO_01 is GPIO_18 on the pi
-		final GpioPinDigitalOutput led = gpio
-				.provisionDigitalOutputPin(RaspiPin.GPIO_01);
-
-		System.out
-				.println(" ... the LED will continue blinking until the program is terminated.");
 		System.out.println(" ... PRESS <CTRL-C> TO STOP THE PROGRAM.");
 
-		// keep program running until user aborts (CTRL-C)
-		while (true) {
-			led.blink(1000, 1000);
-		}
+		CommunicationController controller = new CommunicationController();
+
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						byte b = (byte) 0b11111111;
+						controller.setByte(b);
+						controller.setWrite();
+						controller.setEnabled();
+						Thread.sleep(1000);
+						controller.setDisabled();
+						byte b2 = (byte) 0b01010101;
+						controller.setByte(b2);
+						Thread.sleep(10);
+						controller.setEnabled();
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} catch (PinException e) {
+						e.printStackTrace();
+					}
+					System.out.println("Still running");
+				}
+			}
+		};
+		t.start();
+//		CommunicationController.test(GpioFactory.getInstance());
 	}
 }
