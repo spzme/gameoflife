@@ -4,7 +4,6 @@ import views.NewGUI;
 
 public class Field {
 	private boolean[][] alive;
-	private boolean[][] hasLived;
 	private int rows;
 	private int columns;
 	private NewGUI newGUI;
@@ -14,7 +13,6 @@ public class Field {
 		this.rows = rows;
 		this.columns = columns;
 		alive = new boolean[rows][columns];
-		hasLived = new boolean[rows][columns];
 		this.newGUI = newGUI;
 	}
 	
@@ -31,7 +29,6 @@ public class Field {
 			aliveCellCount++;
 		}
 		alive[x][y] = true;
-		hasLived[x][y] = true;
 	}
 	
 	public void setDead(int x, int y){

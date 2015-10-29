@@ -57,11 +57,11 @@ public class CommunicationController {
 	}
 
 	public void setRead() {
-		readWrite.low();
+		readWrite.high();
 	}
 
 	public void setWrite() {
-		readWrite.high();
+		readWrite.low();
 	}
 
 	public void setByte(Byte b) throws PinException {
@@ -103,7 +103,7 @@ public class CommunicationController {
 		for (int i = 0; i < 8; i++) {
 			GpioPinDigitalInput pin = pins[i];
 			if (pin.isHigh()) {
-				result = (byte) (result & mask);
+				result = (byte) (result ^ mask);
 			}
 			mask = (byte) (mask << 1);
 		}

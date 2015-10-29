@@ -2,6 +2,7 @@ package views;
 
 import controller.Game;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,7 +23,6 @@ import javax.swing.JComboBox;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import model.Cell;
 import model.Field;
 import model.Tuple;
 import utils.CellColors;

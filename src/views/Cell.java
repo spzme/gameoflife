@@ -1,8 +1,6 @@
-package model;
+package views;
 
 import javax.swing.JButton;
-
-import views.NewGUI;
 
 @SuppressWarnings("serial")
 public class Cell extends JButton {
