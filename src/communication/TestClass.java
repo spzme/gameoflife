@@ -23,7 +23,7 @@ public class TestClass {
 						controller.setByte(b2);
 						Thread.sleep(10);
 						controller.setEnabled();
-						Thread.sleep(5000);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					} catch (PinException e) {
@@ -34,6 +34,5 @@ public class TestClass {
 			}
 		};
 		t.start();
-//		CommunicationController.test(GpioFactory.getInstance());
 	}
 }

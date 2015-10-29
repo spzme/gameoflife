@@ -2,7 +2,6 @@ package communication;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -12,16 +11,16 @@ import com.pi4j.io.gpio.RaspiPin;
 
 public class CommunicationController {
 	private GpioController gpio;
-	public GpioPinDigitalMultipurpose bit0;
-	public GpioPinDigitalMultipurpose bit1;
-	public GpioPinDigitalMultipurpose bit2;
-	public GpioPinDigitalMultipurpose bit3;
-	public GpioPinDigitalMultipurpose bit4;
-	public GpioPinDigitalMultipurpose bit5;
-	public GpioPinDigitalMultipurpose bit6;
-	public GpioPinDigitalMultipurpose bit7;
-	public GpioPinDigitalOutput readWrite;
-	public GpioPinDigitalOutput enableDisable;
+	private GpioPinDigitalMultipurpose bit0;
+	private GpioPinDigitalMultipurpose bit1;
+	private GpioPinDigitalMultipurpose bit2;
+	private GpioPinDigitalMultipurpose bit3;
+	private GpioPinDigitalMultipurpose bit4;
+	private GpioPinDigitalMultipurpose bit5;
+	private GpioPinDigitalMultipurpose bit6;
+	private GpioPinDigitalMultipurpose bit7;
+	private GpioPinDigitalOutput readWrite;
+	private GpioPinDigitalOutput enableDisable;
 
 	public CommunicationController() throws PinException {
 		gpio = GpioFactory.getInstance();
@@ -49,33 +48,6 @@ public class CommunicationController {
 				.getPin(23));
 	}
 
-	public static Pin getPin(int i) throws PinException {
-		switch (i) {
-		case 9:
-			return RaspiPin.GPIO_00;
-		case 10:
-			return RaspiPin.GPIO_01;
-		case 11:
-			return RaspiPin.GPIO_02;
-		case 12:
-			return RaspiPin.GPIO_03;
-		case 13:
-			return RaspiPin.GPIO_04;
-		case 14:
-			return RaspiPin.GPIO_05;
-		case 15:
-			return RaspiPin.GPIO_06;
-		case 21:
-			return RaspiPin.GPIO_12;
-		case 22:
-			return RaspiPin.GPIO_13;
-		case 23:
-			return RaspiPin.GPIO_14;
-		default:
-			throw new PinException();
-		}
-	}
-
 	public void setEnabled() {
 		enableDisable.high();
 	}
@@ -85,11 +57,11 @@ public class CommunicationController {
 	}
 
 	public void setRead() {
-		readWrite.high();
+		readWrite.low();
 	}
 
 	public void setWrite() {
-		readWrite.low();
+		readWrite.high();
 	}
 
 	public void setByte(Byte b) throws PinException {
@@ -151,13 +123,30 @@ public class CommunicationController {
 		return result;
 	}
 	
-	public static void test(GpioController gpio) {
-		try {
-			GpioPinDigitalInput input = gpio.provisionDigitalInputPin(CommunicationController.getPin(9));
-			input.setMode(PinMode.DIGITAL_OUTPUT);
-		} catch (PinException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public static Pin getPin(int i) throws PinException {
+		switch (i) {
+		case 9:
+			return RaspiPin.GPIO_00;
+		case 10:
+			return RaspiPin.GPIO_01;
+		case 11:
+			return RaspiPin.GPIO_02;
+		case 12:
+			return RaspiPin.GPIO_03;
+		case 13:
+			return RaspiPin.GPIO_04;
+		case 14:
+			return RaspiPin.GPIO_05;
+		case 15:
+			return RaspiPin.GPIO_06;
+		case 21:
+			return RaspiPin.GPIO_12;
+		case 22:
+			return RaspiPin.GPIO_13;
+		case 23:
+			return RaspiPin.GPIO_14;
+		default:
+			throw new PinException();
 		}
 	}
 
