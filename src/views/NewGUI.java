@@ -24,6 +24,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import model.Field;
+import model.Rule;
 import model.Tuple;
 import utils.CellColors;
 
@@ -58,6 +59,7 @@ public class NewGUI extends JFrame {
 
 	private static final int ROW_BOUNDS = 100;
 	private static final int COLUMN_BOUNDS = 100;
+	
 	private JTextField stayAliveField;
 	private JTextField getAliveField;
 
@@ -125,6 +127,9 @@ public class NewGUI extends JFrame {
 		getAliveField.setAlignmentX(0.0f);
 		verticalBox.add(getAliveField);
 		getAliveField.setColumns(10);
+		
+		Component verticalStrut_9 = Box.createVerticalStrut(20);
+		verticalBox.add(verticalStrut_9);
 
 		JLabel lblRows = new JLabel("Rows");
 		verticalBox.add(lblRows);
@@ -305,7 +310,7 @@ public class NewGUI extends JFrame {
 				grid.setVisible(false);
 				grid.removeAll();
 
-				game = new Game(new Field(rows, columns, this));
+				game = new Game(new Field(rows, columns, this), new Rule(stayAliveField.getText(), getAliveField.getText()));
 				cells = new Cell[rows][columns];
 				// Set the vgap and hgap to -1 to reduce waste of space around
 				// cells
