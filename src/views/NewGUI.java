@@ -2,7 +2,6 @@ package views;
 
 import controller.Game;
 
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,6 +10,7 @@ import java.awt.FlowLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,6 +23,8 @@ import javax.swing.JComboBox;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import figures.Figure;
+import figures.Glider;
 import model.Field;
 import model.Rule;
 import model.Tuple;
@@ -59,7 +61,7 @@ public class NewGUI extends JFrame {
 
 	private static final int ROW_BOUNDS = 100;
 	private static final int COLUMN_BOUNDS = 100;
-	
+
 	private JTextField stayAliveField;
 	private JTextField getAliveField;
 
@@ -96,40 +98,49 @@ public class NewGUI extends JFrame {
 		settingsPanel.add(verticalBox);
 
 		JLabel lblSettings = new JLabel("Settings");
+		lblSettings.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		verticalBox.add(lblSettings);
 
 		Component verticalStrut = Box.createVerticalStrut(20);
 		verticalBox.add(verticalStrut);
-		
-		JLabel lblRules = new JLabel("Rules");
+
+		JLabel lblRules = new JLabel("Cell properties");
+		lblRules.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		verticalBox.add(lblRules);
-		
-		Component verticalStrut_8 = Box.createVerticalStrut(10);
+
+		Component verticalStrut_8 = Box.createVerticalStrut(5);
 		verticalBox.add(verticalStrut_8);
-		
-		JLabel lblAmountOfNeighbours = new JLabel("Amount of neighbours to stay alive");
+
+		JLabel lblAmountOfNeighbours = new JLabel("Neighbours to stay alive");
 		verticalBox.add(lblAmountOfNeighbours);
-		
+
 		stayAliveField = new JTextField();
 		stayAliveField.setText("23");
 		stayAliveField.setAlignmentX(Component.LEFT_ALIGNMENT);
 		verticalBox.add(stayAliveField);
 		stayAliveField.setColumns(10);
-		
+
 		Component verticalStrut_7 = Box.createVerticalStrut(5);
 		verticalBox.add(verticalStrut_7);
-		
-		JLabel lblAmountOfNeighbours_1 = new JLabel("Amount of neighbours to get alive");
+
+		JLabel lblAmountOfNeighbours_1 = new JLabel("Neighbours to get alive");
 		verticalBox.add(lblAmountOfNeighbours_1);
-		
+
 		getAliveField = new JTextField();
 		getAliveField.setText("3");
 		getAliveField.setAlignmentX(0.0f);
 		verticalBox.add(getAliveField);
 		getAliveField.setColumns(10);
-		
-		Component verticalStrut_9 = Box.createVerticalStrut(20);
+
+		Component verticalStrut_9 = Box.createVerticalStrut(10);
 		verticalBox.add(verticalStrut_9);
+
+		JLabel lblFieldProperties = new JLabel("Field properties");
+		lblFieldProperties.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		verticalBox.add(lblFieldProperties);
+
+		Component verticalStrut_10 = Box.createVerticalStrut(5);
+		verticalBox.add(verticalStrut_10);
 
 		JLabel lblRows = new JLabel("Rows");
 		verticalBox.add(lblRows);
@@ -156,6 +167,7 @@ public class NewGUI extends JFrame {
 		verticalBox.add(verticalStrut_1);
 
 		JLabel lblSpeed = new JLabel("Speed");
+		lblSpeed.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		verticalBox.add(lblSpeed);
 
 		Box horizontalBox = Box.createHorizontalBox();
@@ -196,6 +208,7 @@ public class NewGUI extends JFrame {
 		});
 
 		JLabel cellsAliveLabel = new JLabel("Color when cell is alive");
+		cellsAliveLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		verticalBox.add(cellsAliveLabel);
 		verticalBox.add(aliveColorBox);
 
@@ -218,6 +231,7 @@ public class NewGUI extends JFrame {
 		verticalBox.add(verticalStrut_4);
 
 		JLabel lblDead = new JLabel("Color when cell is dead");
+		lblDead.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		verticalBox.add(lblDead);
 		verticalBox.add(deadColorBox);
 
@@ -240,6 +254,7 @@ public class NewGUI extends JFrame {
 		verticalBox.add(verticalStrut_5);
 
 		JLabel lblHasLived = new JLabel("Color when cell has lived");
+		lblHasLived.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		verticalBox.add(lblHasLived);
 		verticalBox.add(hasLivedColorBox);
 
@@ -293,6 +308,44 @@ public class NewGUI extends JFrame {
 		displayCellsAlive(0);
 		buttonPanel.add(lblCellsAlive);
 
+		JPanel extraPanel = new JPanel();
+		contentPane.add(extraPanel, BorderLayout.EAST);
+
+		Box verticalBox_1 = Box.createVerticalBox();
+		extraPanel.add(verticalBox_1);
+
+		JLabel figureLabel = new JLabel("Figures");
+		figureLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		verticalBox_1.add(figureLabel);
+		
+		Component verticalStrut_11 = Box.createVerticalStrut(5);
+		verticalBox_1.add(verticalStrut_11);
+
+		JComboBox figureComboBox = new JComboBox();
+		figureComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		figureComboBox.addItem(new Glider());
+		verticalBox_1.add(figureComboBox);
+
+		JButton createFigureButton = new JButton("Create");
+		createFigureButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				generateField();
+				Figure f = (Figure) figureComboBox.getSelectedItem();
+				boolean[][] field = f.getField(game.getField().getColumnCount(), game.getField().getRowCount());
+				for (int x = 0; x < game.getField().getColumnCount(); x++) {
+					for (int y = 0; y < game.getField().getRowCount(); y++) {
+						cells[x][y].setAlive(field[x][y]);
+						game.getField().setAlive(x, y, cells[x][y].isAlive());
+					}
+				}
+			}
+		});
+		
+		Component verticalStrut_12 = Box.createVerticalStrut(5);
+		verticalBox_1.add(verticalStrut_12);
+		verticalBox_1.add(createFigureButton);
+
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}
@@ -310,7 +363,8 @@ public class NewGUI extends JFrame {
 				grid.setVisible(false);
 				grid.removeAll();
 
-				game = new Game(new Field(rows, columns, this), new Rule(stayAliveField.getText(), getAliveField.getText()));
+				game = new Game(new Field(rows, columns), new Rule(
+						stayAliveField.getText(), getAliveField.getText()));
 				cells = new Cell[rows][columns];
 				// Set the vgap and hgap to -1 to reduce waste of space around
 				// cells
@@ -323,8 +377,8 @@ public class NewGUI extends JFrame {
 						cells[xx][yy].addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								cells[xx][yy].toggleState();
-								cells[xx][yy].setAlive(cells[xx][yy].isAlive());
-								game.getField().setAlive(xx, yy, cells[xx][yy].isAlive());
+								game.getField().setAlive(xx, yy,
+										cells[xx][yy].isAlive());
 							}
 						});
 						grid.add(cells[xx][yy]);
@@ -369,7 +423,7 @@ public class NewGUI extends JFrame {
 		generatingThread.start();
 	}
 
-	private void stopGame() {
+	public void stopGame() {
 		startButton.setText("Start");
 		displayCellsAlive(0);
 		if (generatingThread != null) {
@@ -394,8 +448,18 @@ public class NewGUI extends JFrame {
 	// update the GUI based on the generation.
 	private void updateGrid(Field field) {
 		int cellsAlive = field.getAliveCellCount();
-		for(Tuple t : game.getDifferences()){
+		for (Tuple t : game.getDifferences()) {
 			cells[t.x][t.y].setAlive(field.getAliveState(t.x, t.y));
+		}
+		displayCellsAlive(cellsAlive);
+	}
+	
+	public void updateGridTotally(Field field) {
+		int cellsAlive = field.getAliveCellCount();
+		for (int x = 0; x < field.getColumnCount(); x++) {
+			for (int y = 0; y < field.getRowCount(); y++) {
+				cells[x][y].setAlive(field.getAliveState(x, y));
+			}
 		}
 		displayCellsAlive(cellsAlive);
 	}

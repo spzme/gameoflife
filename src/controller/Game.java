@@ -23,7 +23,7 @@ public class Game {
 		differences = new ArrayList<Tuple>();
 		generationCount++;
 		previousField = field;
-		Field newField = new Field(field.getRowCount(), field.getColumnCount(), field.getGUI());
+		Field newField = new Field(field.getRowCount(), field.getColumnCount());
 		for (int i = 0; i < field.getRowCount(); i++) {
 			for (int j = 0; j < field.getColumnCount(); j++) {
 				boolean previousState = field.getAliveState(i, j);

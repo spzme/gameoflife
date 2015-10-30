@@ -1,19 +1,15 @@
 package model;
 
-import views.NewGUI;
-
 public class Field {
 	private boolean[][] alive;
 	private int rows;
 	private int columns;
-	private NewGUI newGUI;
 	private int aliveCellCount;
 	
-	public Field(int rows, int columns, NewGUI newGUI) {
+	public Field(int rows, int columns) {
 		this.rows = rows;
 		this.columns = columns;
 		alive = new boolean[rows][columns];
-		this.newGUI = newGUI;
 	}
 	
 	public void setAlive(int x, int y, boolean live){
@@ -59,10 +55,6 @@ public class Field {
 			sb.append("\n");
 		}
 		System.out.println(sb);
-	}
-	
-	public NewGUI getGUI(){
-		return this.newGUI;
 	}
 	
 	public int getAliveCellCount(){
