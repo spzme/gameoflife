@@ -58,6 +58,8 @@ public class NewGUI extends JFrame {
 
 	private static final int ROW_BOUNDS = 100;
 	private static final int COLUMN_BOUNDS = 100;
+	private JTextField stayAliveField;
+	private JTextField getAliveField;
 
 	/**
 	 * Launch the GUI.
@@ -96,6 +98,33 @@ public class NewGUI extends JFrame {
 
 		Component verticalStrut = Box.createVerticalStrut(20);
 		verticalBox.add(verticalStrut);
+		
+		JLabel lblRules = new JLabel("Rules");
+		verticalBox.add(lblRules);
+		
+		Component verticalStrut_8 = Box.createVerticalStrut(10);
+		verticalBox.add(verticalStrut_8);
+		
+		JLabel lblAmountOfNeighbours = new JLabel("Amount of neighbours to stay alive");
+		verticalBox.add(lblAmountOfNeighbours);
+		
+		stayAliveField = new JTextField();
+		stayAliveField.setText("23");
+		stayAliveField.setAlignmentX(Component.LEFT_ALIGNMENT);
+		verticalBox.add(stayAliveField);
+		stayAliveField.setColumns(10);
+		
+		Component verticalStrut_7 = Box.createVerticalStrut(5);
+		verticalBox.add(verticalStrut_7);
+		
+		JLabel lblAmountOfNeighbours_1 = new JLabel("Amount of neighbours to get alive");
+		verticalBox.add(lblAmountOfNeighbours_1);
+		
+		getAliveField = new JTextField();
+		getAliveField.setText("3");
+		getAliveField.setAlignmentX(0.0f);
+		verticalBox.add(getAliveField);
+		getAliveField.setColumns(10);
 
 		JLabel lblRows = new JLabel("Rows");
 		verticalBox.add(lblRows);
