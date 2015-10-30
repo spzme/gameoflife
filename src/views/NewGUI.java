@@ -23,8 +23,11 @@ import javax.swing.JComboBox;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import figures.Blinker;
 import figures.Figure;
 import figures.Glider;
+import figures.Pulsar;
+import figures.Toad;
 import model.Field;
 import model.Rule;
 import model.Tuple;
@@ -317,31 +320,49 @@ public class NewGUI extends JFrame {
 		JLabel figureLabel = new JLabel("Figures");
 		figureLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		verticalBox_1.add(figureLabel);
-		
+
 		Component verticalStrut_11 = Box.createVerticalStrut(5);
 		verticalBox_1.add(verticalStrut_11);
 
 		JComboBox figureComboBox = new JComboBox();
 		figureComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		figureComboBox.addItem(new Glider());
+		figureComboBox.addItem(new Blinker());
+		figureComboBox.addItem(new Toad());
+		figureComboBox.addItem(new Pulsar());
 		verticalBox_1.add(figureComboBox);
 
 		JButton createFigureButton = new JButton("Create");
 		createFigureButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				generateField();
-				Figure f = (Figure) figureComboBox.getSelectedItem();
-				boolean[][] field = f.getField(game.getField().getColumnCount(), game.getField().getRowCount());
-				for (int x = 0; x < game.getField().getColumnCount(); x++) {
-					for (int y = 0; y < game.getField().getRowCount(); y++) {
-						cells[x][y].setAlive(field[x][y]);
-						game.getField().setAlive(x, y, cells[x][y].isAlive());
+				try {
+					Figure f = (Figure) figureComboBox.getSelectedItem();
+					int rows = Integer.parseInt(rowInput.getText());
+					int columns = Integer.parseInt(columnInput.getText());
+					if (rows < f.rows) {
+						rowInput.setText(String.valueOf(f.rows));
+						rows = f.rows;
 					}
+					if (columns < f.columns) {
+						columnInput.setText(String.valueOf(f.columns));
+						columns = f.columns;
+					}
+					generateField();
+					boolean[][] field = f.getField(columns, rows);
+					for (int x = 0; x < game.getField().getColumnCount(); x++) {
+						for (int y = 0; y < game.getField().getRowCount(); y++) {
+							cells[x][y].setAlive(field[x][y]);
+							game.getField().setAlive(x, y,
+									cells[x][y].isAlive());
+						}
+					}
+				} catch (NumberFormatException nfe) {
+					// Do nothing
 				}
 			}
 		});
-		
+
 		Component verticalStrut_12 = Box.createVerticalStrut(5);
 		verticalBox_1.add(verticalStrut_12);
 		verticalBox_1.add(createFigureButton);
@@ -363,16 +384,17 @@ public class NewGUI extends JFrame {
 				grid.setVisible(false);
 				grid.removeAll();
 
-				game = new Game(new Field(rows, columns), new Rule(
+				game = new Game(new Field(columns, rows), new Rule(
 						stayAliveField.getText(), getAliveField.getText()));
-				cells = new Cell[rows][columns];
+				System.out.println("Columns: " + columns + " Rows: " + rows);
+				cells = new Cell[columns][rows];
 				// Set the vgap and hgap to -1 to reduce waste of space around
 				// cells
 				grid.setLayout(new GridLayout(rows, columns, -1, -1));
 				for (int row = 0; row < rows; row++) {
 					for (int column = 0; column < columns; column++) {
-						int xx = row;
-						int yy = column;
+						int xx = column;
+						int yy = row;
 						cells[xx][yy] = new Cell(this);
 						cells[xx][yy].addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
@@ -453,7 +475,7 @@ public class NewGUI extends JFrame {
 		}
 		displayCellsAlive(cellsAlive);
 	}
-	
+
 	public void updateGridTotally(Field field) {
 		int cellsAlive = field.getAliveCellCount();
 		for (int x = 0; x < field.getColumnCount(); x++) {

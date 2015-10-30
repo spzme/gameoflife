@@ -6,10 +6,10 @@ public class Field {
 	private int columns;
 	private int aliveCellCount;
 	
-	public Field(int rows, int columns) {
+	public Field(int columns, int rows) {
 		this.rows = rows;
 		this.columns = columns;
-		alive = new boolean[rows][columns];
+		alive = new boolean[columns][rows];
 	}
 	
 	public void setAlive(int x, int y, boolean live){
@@ -50,7 +50,7 @@ public class Field {
 		StringBuilder sb = new StringBuilder();
 		for (int m = 0; m < rows; m++){
 			for (int n = 0; n < columns; n++){
-				sb.append(alive[m][n] ? "1" : "0");
+				sb.append(alive[n][m] ? "1" : "0");
 			}
 			sb.append("\n");
 		}
