@@ -8,13 +8,15 @@ public class Game {
 	private Field field;
 	private Field previousField;
 	private int generationCount;
+	private Rule rule;
 	ArrayList<Tuple> differences;
 	
 	
-	public Game(Field field) {
+	public Game(Field field, Rule rule) {
 		this.field = field;
 		previousField = field;
 		generationCount = 1;
+		this.rule = rule;
 	}
 
 	public Field nextGeneration() {
@@ -71,27 +73,16 @@ public class Game {
 				}
 				// The amount of alive neighbours is determined now, determine
 				// alive state of cell.
-
-				if (neighbours < 2) {
-					// Die because of underpopulation.
+				if(field.getAliveState(i, j)){
+					newState = rule.getLiveNextState(neighbours);
+					
+				} else {
+					newState = rule.getDeadNextState(neighbours);
+				}
+				if (newState){
+					newField.setAlive(i,j);
+				}	else {
 					newField.setDead(i, j);
-					newState = false;
-				}
-				if (neighbours == 3) {
-					// Live on to the next generation.
-					// Or, become alive!
-					newField.setAlive(i, j);
-					newState = true;
-				}
-				if (neighbours == 2 && field.getAliveState(i, j)) {
-					// Live on to the next generation
-					newField.setAlive(i, j);
-					newState = true;
-				}
-				if (neighbours > 3) {
-					// Die because of overpopulation
-					newField.setDead(i, j);
-					newState = false;
 				}
 				if (newState != previousState){
 					differences.add(new Tuple(i,j));
