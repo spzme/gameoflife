@@ -23,69 +23,69 @@ public class Game {
 		differences = new ArrayList<Tuple>();
 		generationCount++;
 		previousField = field;
-		Field newField = new Field(field.getRowCount(), field.getColumnCount());
-		for (int i = 0; i < field.getRowCount(); i++) {
-			for (int j = 0; j < field.getColumnCount(); j++) {
-				boolean previousState = field.getAliveState(i, j);
+		Field newField = new Field(field.getColumnCount(), field.getRowCount());
+		for (int y = 0; y < field.getRowCount(); y++) {
+			for (int x = 0; x < field.getColumnCount(); x++) {
+				boolean previousState = field.getAliveState(x, y);
 				boolean newState = false;
 				int neighbours = 0;
 				// top row
-				if (i > 0) {
+				if (y > 0) {
 					// top mid
-					if (field.getAliveState(i - 1, j)) {
+					if (field.getAliveState(x, y - 1)) {
 						neighbours++;
 					}
 					// top left
-					if (j > 0 && field.getAliveState(i - 1, j - 1)) {
+					if (x > 0 && field.getAliveState(x - 1, y - 1)) {
 						neighbours++;
 					}
 					// top right
-					if (j < field.getColumnCount() - 1
-							&& field.getAliveState(i - 1, j + 1)) {
+					if (x < field.getColumnCount() - 1
+							&& field.getAliveState(x + 1, y - 1)) {
 						neighbours++;
 					}
 				}
 				// mid row
 				// mid left
-				if (j > 0 && field.getAliveState(i, j - 1)) {
+				if (x > 0 && field.getAliveState(x - 1, y)) {
 					neighbours++;
 				}
 				// mid right
-				if (j < field.getColumnCount() - 1 && field.getAliveState(i, j + 1)) {
+				if (x < field.getColumnCount() - 1 && field.getAliveState(x + 1, y)) {
 					neighbours++;
 				}
 				// bottom row
-				if (i < field.getRowCount() - 1) {
+				if (y < field.getRowCount() - 1) {
 					// bottom mid
-					if (field.getAliveState(i + 1, j)) {
+					if (field.getAliveState(x, y + 1)) {
 						neighbours++;
 					}
 					// bottom left
-					if (j > 0 && field.getAliveState(i + 1, j - 1)) {
+					if (x > 0 && field.getAliveState(x - 1, y + 1)) {
 						neighbours++;
 					}
 					// bottom right
-					if (j < field.getColumnCount() - 1
-							&& field.getAliveState(i + 1, j + 1)) {
+					if (x < field.getColumnCount() - 1
+							&& field.getAliveState(x + 1, y + 1)) {
 						neighbours++;
 					}
 
 				}
 				// The amount of alive neighbours is determined now, determine
 				// alive state of cell.
-				if(field.getAliveState(i, j)){
+				if(field.getAliveState(x, y)){
 					newState = rule.getLiveNextState(neighbours);
 					
 				} else {
 					newState = rule.getDeadNextState(neighbours);
 				}
 				if (newState){
-					newField.setAlive(i,j);
+					newField.setAlive(x, y);
 				}	else {
-					newField.setDead(i, j);
+					newField.setDead(x, y);
 				}
 				if (newState != previousState){
-					differences.add(new Tuple(i,j));
+					differences.add(new Tuple(x, y));
 				}
 			}
 		}

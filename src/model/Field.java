@@ -28,7 +28,7 @@ public class Field {
 	}
 	
 	public void setDead(int x, int y){
-		if(alive[x][y]==true){
+		if(alive[x][y] == true){
 			aliveCellCount--;
 		}
 		alive[x][y] = false;

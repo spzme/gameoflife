@@ -24,8 +24,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import figures.Blinker;
+import figures.CircleOfFire;
 import figures.Figure;
 import figures.Glider;
+import figures.GliderGun;
 import figures.Pulsar;
 import figures.Toad;
 import model.Field;
@@ -324,12 +326,14 @@ public class NewGUI extends JFrame {
 		Component verticalStrut_11 = Box.createVerticalStrut(5);
 		verticalBox_1.add(verticalStrut_11);
 
-		JComboBox figureComboBox = new JComboBox();
+		JComboBox<Figure> figureComboBox = new JComboBox<Figure>();
 		figureComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		figureComboBox.addItem(new Glider());
 		figureComboBox.addItem(new Blinker());
 		figureComboBox.addItem(new Toad());
 		figureComboBox.addItem(new Pulsar());
+		figureComboBox.addItem(new GliderGun());
+//		figureComboBox.addItem(new CircleOfFire());
 		verticalBox_1.add(figureComboBox);
 
 		JButton createFigureButton = new JButton("Create");
