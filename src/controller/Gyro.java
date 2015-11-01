@@ -35,30 +35,30 @@ public class Gyro {
 			}
 			//Check for right tilts
 			//TODO: take into account that from 0 to 360 is only one degree difference
-			if (inputs[0].angleX < inputs[10].angleX){
+			if (inputs[0].angleX > inputs[INPUTCOUNT - 1].angleX){
 				//right tilt occurred
 				//check intensity
-				if(inputs[0].angleX < inputs[INPUTCOUNT - 1].angleX - INTENSITY_TRESHOLD){
+				if(inputs[0].angleX > inputs[INPUTCOUNT - 1].angleX + INTENSITY_TRESHOLD){
 					return GyroRule.FAST_TILT_RIGHT;
 				} else {
 					return GyroRule.TILT_RIGHT;
 				}
 			}
 			//check for front tilts
-			if(inputs[0].angleY < inputs[10].angleY){
+			if(inputs[0].angleY < inputs[INPUTCOUNT - 1].angleY){
 				//front tilt occured
 				//check intensity
-				if(inputs[0].angleY < inputs[10].angleY - INTENSITY_TRESHOLD){
+				if(inputs[0].angleY < inputs[INPUTCOUNT-1].angleY - INTENSITY_TRESHOLD){
 					return GyroRule.FAST_TILT_FRONT;
 				} else {
 					return GyroRule.TILT_FRONT;
 				}
 			}
 			//check for back tilts
-			if(inputs[0].angleY > inputs[10].angleY){
+			if(inputs[0].angleY > inputs[INPUTCOUNT - 1].angleY){
 				//back tilt occured
 				//check intensity
-				if(inputs[0].angleY > inputs[10].angleY + INTENSITY_TRESHOLD){
+				if(inputs[0].angleY > inputs[INPUTCOUNT - 1].angleY + INTENSITY_TRESHOLD){
 					return GyroRule.FAST_TILT_BACK;
 				}	else { 
 					return GyroRule.TILT_BACK;
