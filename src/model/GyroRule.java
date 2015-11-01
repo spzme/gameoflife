@@ -1,0 +1,13 @@
+package model;
+
+public enum GyroRule {
+	DEFAULT,
+	TILT_LEFT,
+	FAST_TILT_LEFT,
+	TILT_RIGHT,
+	FAST_TILT_RIGHT,
+	TILT_FRONT,
+	FAST_TILT_FRONT,
+	TILT_BACK,
+	FAST_TILT_BACK
+}
