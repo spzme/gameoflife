@@ -9,9 +9,9 @@ public class Cell extends JButton {
 	private boolean alive;
 	// A boolean to indicate if the cell has ever lived
 	private boolean hasLived;
-	private NewGUI gui;
+	private GUI gui;
 
-	public Cell(NewGUI newGUI) {
+	public Cell(GUI newGUI) {
 		super();
 		this.gui = newGUI;
 		alive = false;

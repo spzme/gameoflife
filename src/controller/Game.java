@@ -1,11 +1,9 @@
 package controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import sound.SoundController;
 import model.*;
 
 public class Game {
@@ -109,7 +107,7 @@ public class Game {
 		}
 
 		System.out.println("Field returned by nextGeneration");
-//		field.printField();
+		// field.printField();
 		return field;
 	}
 
@@ -117,10 +115,10 @@ public class Game {
 		gyro.receiveInput();
 	}
 
-	public void clearGyroInputHistory(){
+	public void clearGyroInputHistory() {
 		gyro.clearInputHistory();
 	}
-	
+
 	// Alter the field based on a gyro rule that is applicable at the moment.
 	public Field applyGyroRule() {
 		l.lock();

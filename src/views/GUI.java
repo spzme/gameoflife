@@ -37,7 +37,7 @@ import sound.SoundController;
 import utils.CellColors;
 
 @SuppressWarnings("serial")
-public class NewGUI extends JFrame {
+public class GUI extends JFrame {
 	private Thread generatingThread;
 	private Thread gyroRuleThread;
 	private Thread gyroInputThread;
@@ -87,13 +87,13 @@ public class NewGUI extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				NewGUI frame = new NewGUI();
+				GUI frame = new GUI();
 				frame.setVisible(true);
 			}
 		});
 	}
 
-	public NewGUI() {
+	public GUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Game of Life");
 
