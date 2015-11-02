@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import sound.SoundController;
 import model.*;
@@ -21,6 +22,7 @@ public class Game {
 		previousField = field;
 		generationCount = 1;
 		gyro = new Gyro();
+		l = new ReentrantLock();
 		this.rule = rule;
 	}
 
@@ -104,6 +106,10 @@ public class Game {
 			l.unlock();
 		}
 		return field;
+	}
+
+	public void receiveInputFromGyro() {
+		gyro.receiveInput();
 	}
 
 	// Alter the field based on a gyro rule that is applicable at the moment.
