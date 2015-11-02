@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import model.*;
 import model.GyroRule;
@@ -21,6 +22,7 @@ public class Game {
 		previousField = field;
 		generationCount = 1;
 		gyro = new Gyro();
+		l = new ReentrantLock();
 		this.rule = rule;
 	}
 
@@ -103,6 +105,9 @@ public class Game {
 		return field;
 	}
 
+	public void receiveInputFromGyro(){
+		gyro.receiveInput();
+	}
 	
 	//Alter the field based on a gyro rule that is applicable at the moment.
 	public Field applyGyroRule(){

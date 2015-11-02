@@ -11,7 +11,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Font;
-import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,6 +24,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import figures.Blinker;
+import figures.CircleOfFire;
 import figures.Figure;
 import figures.Glider;
 import figures.GliderGun;
@@ -33,13 +33,13 @@ import figures.Toad;
 import model.Field;
 import model.Rule;
 import model.Tuple;
-import sound.SoundController;
 import utils.CellColors;
 
 @SuppressWarnings("serial")
 public class NewGUI extends JFrame {
 	private Thread generatingThread;
-	private Thread gyroThread;
+	private Thread gyroRuleThread;
+	private Thread gyroInputThread;
 	private Game game;
 	private Cell[][] cells;
 	// Color variables so the user has can determine the color of the cells
@@ -70,8 +70,10 @@ public class NewGUI extends JFrame {
 	private static final int COLUMN_BOUNDS = 100;
 	
 	//Check for movements 4 times per second.
-	private static final int GYRO_FREQ = 4;
-
+	private static final int GYRO_RULE_FREQ = 4;
+	//Read gyro inputs 40 times per second.
+	private static final int GYRO_INPUT_FREQ = 40;
+	
 	private JTextField stayAliveField;
 	private JTextField getAliveField;
 
@@ -338,7 +340,7 @@ public class NewGUI extends JFrame {
 		figureComboBox.addItem(new Toad());
 		figureComboBox.addItem(new Pulsar());
 		figureComboBox.addItem(new GliderGun());
-		// figureComboBox.addItem(new CircleOfFire());
+//		figureComboBox.addItem(new CircleOfFire());
 		verticalBox_1.add(figureComboBox);
 
 		JButton createFigureButton = new JButton("Create");
@@ -378,7 +380,6 @@ public class NewGUI extends JFrame {
 
 		this.pack();
 		this.setLocationRelativeTo(null);
-		playMusic();
 	}
 
 	private void generateField() {
@@ -453,12 +454,12 @@ public class NewGUI extends JFrame {
 			}
 		};
 		
-		long timeToWaitGyro = 1000 / GYRO_FREQ;
-		gyroThread = new Thread() {
+		long timeToWaitGyroRule = 1000 / GYRO_RULE_FREQ;
+		gyroRuleThread = new Thread() {
 			public void run(){
 				try{
 					while(true) {
-						Thread.sleep(timeToWaitGyro);
+						Thread.sleep(timeToWaitGyroRule);
 						checkGyroRule();
 					}
 				} catch (InterruptedException e) {
@@ -466,8 +467,22 @@ public class NewGUI extends JFrame {
 				}
 			}
 		};
+		long timeToWaitGyroInput = 1000 / GYRO_INPUT_FREQ;
+		gyroInputThread = new Thread() {
+			public void run() {
+				try{
+					while(true){
+						Thread.sleep(timeToWaitGyroInput);
+						game.receiveInputFromGyro();
+					}
+				} catch (InterruptedException e){
+					//Do nothing
+				}
+			}
+		};
 		generatingThread.start();
-		gyroThread.start();
+		gyroInputThread.start();
+		gyroRuleThread.start();
 	}
 
 	public void checkGyroRule(){
@@ -521,21 +536,5 @@ public class NewGUI extends JFrame {
 
 	private void displayGenerationCount() {
 		lblGenerationCounter.setText("Generation " + game.getGenerationCount());
-	}
-
-	private void playMusic() {
-		Thread t = new Thread() {
-			@Override
-			public void run() {
-				try {
-					SoundController.playAudio(true);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		t.start();
 	}
 }

@@ -1,4 +1,5 @@
 package controller;
+
 import model.GyroInput;
 import model.GyroRule;
 
@@ -12,7 +13,22 @@ public class Gyro {
 		inputs = new GyroInput[INPUTCOUNT];
 	}
 	
-	public void receiveInput(GyroInput input){
+	public GyroInput receiveInput(){
+//		float accX; //Acceleration in X direction, m/s^2
+//		float accY; //Acceleration in Y direction, m/s^2
+//		float accZ; //Acceleration in Z direction, m/s^2	
+		//TODO: Actually read input from gyro sensor
+		float angleX = 0;
+		float angleY = 0;
+		float angleZ = 0;
+		GyroInput input = new GyroInput(angleX,angleY,angleZ);
+		
+		insertInput(input);
+		return input;
+	}
+	
+	public void insertInput(GyroInput input){
+		System.out.println("An input was added");
 		GyroInput[] newInputs = new GyroInput[INPUTCOUNT];
 		for(int i = 0; i < INPUTCOUNT - 1; i++){
 			newInputs[i+1] = inputs[i];
@@ -23,6 +39,10 @@ public class Gyro {
 	
 	//returns the rule the game should use according to the gyro inputs
 		public GyroRule checkMovement(){
+			if(inputs[INPUTCOUNT-1] == null){
+				System.out.println("Don't have enough gyroInputs yet in history to determine movement");
+				return GyroRule.DEFAULT;
+			}
 			//Check for left tilts
 			if (inputs[0].angleX > inputs[INPUTCOUNT - 1].angleX){
 				//left tilt occurred
