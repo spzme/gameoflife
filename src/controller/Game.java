@@ -1,10 +1,11 @@
 package controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 
+import sound.SoundController;
 import model.*;
-import model.GyroRule;
 
 public class Game {
 	private Field field;
@@ -14,8 +15,7 @@ public class Game {
 	ArrayList<Tuple> differences;
 	Gyro gyro;
 	Lock l;
-	
-	
+
 	public Game(Field field, Rule rule) {
 		this.field = field;
 		previousField = field;
@@ -26,11 +26,12 @@ public class Game {
 
 	public Field nextGeneration() {
 		l.lock();
-		try{
+		try {
 			differences = new ArrayList<Tuple>();
 			generationCount++;
 			previousField = field;
-			Field newField = new Field(field.getColumnCount(), field.getRowCount());
+			Field newField = new Field(field.getColumnCount(),
+					field.getRowCount());
 			for (int y = 0; y < field.getRowCount(); y++) {
 				for (int x = 0; x < field.getColumnCount(); x++) {
 					boolean previousState = field.getAliveState(x, y);
@@ -58,7 +59,8 @@ public class Game {
 						neighbours++;
 					}
 					// mid right
-					if (x < field.getColumnCount() - 1 && field.getAliveState(x + 1, y)) {
+					if (x < field.getColumnCount() - 1
+							&& field.getAliveState(x + 1, y)) {
 						neighbours++;
 					}
 					// bottom row
@@ -76,43 +78,44 @@ public class Game {
 								&& field.getAliveState(x + 1, y + 1)) {
 							neighbours++;
 						}
-	
+
 					}
-					// The amount of alive neighbours is determined now, determine
+					// The amount of alive neighbours is determined now,
+					// determine
 					// alive state of cell.
-					if(field.getAliveState(x, y)){
+					if (field.getAliveState(x, y)) {
 						newState = rule.getLiveNextState(neighbours);
-						
+
 					} else {
 						newState = rule.getDeadNextState(neighbours);
 					}
-					if (newState){
+					if (newState) {
 						newField.setAlive(x, y);
-					}	else {
+					} else {
 						newField.setDead(x, y);
 					}
-					if (newState != previousState){
+					if (newState != previousState) {
 						differences.add(new Tuple(x, y));
 					}
 				}
 			}
-				field = newField;
-			} finally {
+			field = newField;
+		} finally {
 			l.unlock();
 		}
 		return field;
 	}
 
-	
-	//Alter the field based on a gyro rule that is applicable at the moment.
-	public Field applyGyroRule(){
+	// Alter the field based on a gyro rule that is applicable at the moment.
+	public Field applyGyroRule() {
 		l.lock();
-		try{
+		try {
 			differences = new ArrayList<Tuple>();
 			previousField = field;
-			Field newField = new Field(field.getColumnCount(), field.getRowCount());
+			Field newField = new Field(field.getColumnCount(),
+					field.getRowCount());
 			GyroRule rule = gyro.checkMovement();
-			switch(rule){
+			switch (rule) {
 			case TILT_LEFT:
 				System.out.println("TILT_LEFT");
 				break;
@@ -139,35 +142,35 @@ public class Game {
 				break;
 			case DEFAULT:
 				System.out.println("No GyroRule was applicable");
-				//Don't do anything
+				// Don't do anything
 				break;
 			}
-			
+
 			field = newField;
 		} finally {
 			l.unlock();
 		}
 		return field;
 	}
-	
+
 	public Field previousGeneration() {
 		generationCount--;
 		field = previousField;
 		return field;
 	}
-	
+
 	public Field getField() {
 		return field;
 	}
-	
+
 	public int getGenerationCount() {
 		return generationCount;
 	}
-	
-	public Tuple[] getDifferences(){
+
+	public Tuple[] getDifferences() {
 		Tuple[] diff = new Tuple[differences.size()];
 		int i = 0;
-		for(Tuple cellDiff : differences){
+		for (Tuple cellDiff : differences) {
 			diff[i] = cellDiff;
 			i++;
 		}
