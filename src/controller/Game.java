@@ -1,8 +1,10 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
 
 import model.*;
+import model.GyroRule;
 
 public class Game {
 	private Field field;
@@ -10,89 +12,141 @@ public class Game {
 	private int generationCount;
 	private Rule rule;
 	ArrayList<Tuple> differences;
+	Gyro gyro;
+	Lock l;
 	
 	
 	public Game(Field field, Rule rule) {
 		this.field = field;
 		previousField = field;
 		generationCount = 1;
+		gyro = new Gyro();
 		this.rule = rule;
 	}
 
 	public Field nextGeneration() {
-		differences = new ArrayList<Tuple>();
-		generationCount++;
-		previousField = field;
-		Field newField = new Field(field.getColumnCount(), field.getRowCount());
-		for (int y = 0; y < field.getRowCount(); y++) {
-			for (int x = 0; x < field.getColumnCount(); x++) {
-				boolean previousState = field.getAliveState(x, y);
-				boolean newState = false;
-				int neighbours = 0;
-				// top row
-				if (y > 0) {
-					// top mid
-					if (field.getAliveState(x, y - 1)) {
+		l.lock();
+		try{
+			differences = new ArrayList<Tuple>();
+			generationCount++;
+			previousField = field;
+			Field newField = new Field(field.getColumnCount(), field.getRowCount());
+			for (int y = 0; y < field.getRowCount(); y++) {
+				for (int x = 0; x < field.getColumnCount(); x++) {
+					boolean previousState = field.getAliveState(x, y);
+					boolean newState = false;
+					int neighbours = 0;
+					// top row
+					if (y > 0) {
+						// top mid
+						if (field.getAliveState(x, y - 1)) {
+							neighbours++;
+						}
+						// top left
+						if (x > 0 && field.getAliveState(x - 1, y - 1)) {
+							neighbours++;
+						}
+						// top right
+						if (x < field.getColumnCount() - 1
+								&& field.getAliveState(x + 1, y - 1)) {
+							neighbours++;
+						}
+					}
+					// mid row
+					// mid left
+					if (x > 0 && field.getAliveState(x - 1, y)) {
 						neighbours++;
 					}
-					// top left
-					if (x > 0 && field.getAliveState(x - 1, y - 1)) {
+					// mid right
+					if (x < field.getColumnCount() - 1 && field.getAliveState(x + 1, y)) {
 						neighbours++;
 					}
-					// top right
-					if (x < field.getColumnCount() - 1
-							&& field.getAliveState(x + 1, y - 1)) {
-						neighbours++;
+					// bottom row
+					if (y < field.getRowCount() - 1) {
+						// bottom mid
+						if (field.getAliveState(x, y + 1)) {
+							neighbours++;
+						}
+						// bottom left
+						if (x > 0 && field.getAliveState(x - 1, y + 1)) {
+							neighbours++;
+						}
+						// bottom right
+						if (x < field.getColumnCount() - 1
+								&& field.getAliveState(x + 1, y + 1)) {
+							neighbours++;
+						}
+	
 					}
-				}
-				// mid row
-				// mid left
-				if (x > 0 && field.getAliveState(x - 1, y)) {
-					neighbours++;
-				}
-				// mid right
-				if (x < field.getColumnCount() - 1 && field.getAliveState(x + 1, y)) {
-					neighbours++;
-				}
-				// bottom row
-				if (y < field.getRowCount() - 1) {
-					// bottom mid
-					if (field.getAliveState(x, y + 1)) {
-						neighbours++;
+					// The amount of alive neighbours is determined now, determine
+					// alive state of cell.
+					if(field.getAliveState(x, y)){
+						newState = rule.getLiveNextState(neighbours);
+						
+					} else {
+						newState = rule.getDeadNextState(neighbours);
 					}
-					// bottom left
-					if (x > 0 && field.getAliveState(x - 1, y + 1)) {
-						neighbours++;
+					if (newState){
+						newField.setAlive(x, y);
+					}	else {
+						newField.setDead(x, y);
 					}
-					// bottom right
-					if (x < field.getColumnCount() - 1
-							&& field.getAliveState(x + 1, y + 1)) {
-						neighbours++;
+					if (newState != previousState){
+						differences.add(new Tuple(x, y));
 					}
-
-				}
-				// The amount of alive neighbours is determined now, determine
-				// alive state of cell.
-				if(field.getAliveState(x, y)){
-					newState = rule.getLiveNextState(neighbours);
-					
-				} else {
-					newState = rule.getDeadNextState(neighbours);
-				}
-				if (newState){
-					newField.setAlive(x, y);
-				}	else {
-					newField.setDead(x, y);
-				}
-				if (newState != previousState){
-					differences.add(new Tuple(x, y));
 				}
 			}
+				field = newField;
+			} finally {
+			l.unlock();
 		}
-		field = newField;
 		return field;
 	}
 
+	public Field applyGyroRule(){
+		l.lock();
+		try{
+			differences = new ArrayList<Tuple>();
+			previousField = field;
+			Field newField = new Field(field.getColumnCount(), field.getRowCount());
+			GyroRule rule = gyro.checkMovement();
+			switch(rule){
+			case TILT_LEFT:
+					
+				break;
+			case FAST_TILT_LEFT:
+				
+				break;
+			case TILT_RIGHT:
+				
+				break;
+			case FAST_TILT_RIGHT:
+				
+				break;
+			case TILT_FRONT:
+				
+				break;
+			case FAST_TILT_FRONT:
+				
+				break;
+			case TILT_BACK:
+				
+				break;
+			case FAST_TILT_BACK:
+					
+				break;
+			case DEFAULT:
+				//Don't do anything
+				break;
+			}
+			
+			field = newField;
+		} finally {
+			l.unlock();
+		}
+		return field;
+	}
+	
 	public Field previousGeneration() {
 		generationCount--;
 		field = previousField;

@@ -21,10 +21,6 @@ public class GyroInput {
 		this.angleZ=angleZ;
 	}
 	
-	//returns the rule the game should use according to the gyro inputs
-	public GyroRule checkMovement(){
-		
-		return GyroRule.DEFAULT;
-	}
+	
 	
 }
