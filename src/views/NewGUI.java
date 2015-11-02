@@ -11,6 +11,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Font;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,7 +25,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import figures.Blinker;
-import figures.CircleOfFire;
 import figures.Figure;
 import figures.Glider;
 import figures.GliderGun;
@@ -33,6 +33,7 @@ import figures.Toad;
 import model.Field;
 import model.Rule;
 import model.Tuple;
+import sound.SoundController;
 import utils.CellColors;
 
 @SuppressWarnings("serial")
@@ -337,7 +338,7 @@ public class NewGUI extends JFrame {
 		figureComboBox.addItem(new Toad());
 		figureComboBox.addItem(new Pulsar());
 		figureComboBox.addItem(new GliderGun());
-//		figureComboBox.addItem(new CircleOfFire());
+		// figureComboBox.addItem(new CircleOfFire());
 		verticalBox_1.add(figureComboBox);
 
 		JButton createFigureButton = new JButton("Create");
@@ -377,6 +378,7 @@ public class NewGUI extends JFrame {
 
 		this.pack();
 		this.setLocationRelativeTo(null);
+		playMusic();
 	}
 
 	private void generateField() {
@@ -519,5 +521,21 @@ public class NewGUI extends JFrame {
 
 	private void displayGenerationCount() {
 		lblGenerationCounter.setText("Generation " + game.getGenerationCount());
+	}
+
+	private void playMusic() {
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				try {
+					SoundController.playAudio(true);
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		t.start();
 	}
 }
