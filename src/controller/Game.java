@@ -21,12 +21,13 @@ public class Game {
 		generationCount = 1;
 		gyro = new Gyro();
 		l = new ReentrantLock();
+		differences = new ArrayList<Tuple>();
 		this.rule = rule;
 	}
 
 	public Field nextGeneration() {
 		l.lock();
-		System.out.println("field locked by nextGeneration");
+//		System.out.println("field locked by nextGeneration");
 		try {
 			differences = new ArrayList<Tuple>();
 			generationCount++;
@@ -103,10 +104,10 @@ public class Game {
 			field = newField;
 		} finally {
 			l.unlock();
-			System.out.println("field unlocked by nextGeneration");
+//			System.out.println("field unlocked by nextGeneration");
 		}
 
-		System.out.println("Field returned by nextGeneration");
+//		System.out.println("Field returned by nextGeneration");
 		// field.printField();
 		return field;
 	}
@@ -122,9 +123,8 @@ public class Game {
 	// Alter the field based on a gyro rule that is applicable at the moment.
 	public Field applyGyroRule() {
 		l.lock();
-		System.out.println("Field locked by gyroRule");
+//		System.out.println("Field locked by gyroRule");
 		try {
-			differences = new ArrayList<Tuple>();
 			previousField = field;
 			Field newField = new Field(field.getColumnCount(),
 					field.getRowCount());
@@ -132,27 +132,43 @@ public class Game {
 			switch (rule) {
 			case TILT_LEFT:
 				System.out.println("TILT_LEFT");
+				newField = field;
+				differences = newField.shiftLeft(1);
 				break;
 			case STEEP_TILT_LEFT:
 				System.out.println("STEEP_TILT_LEFT");
+				newField = field;
+				differences = newField.shiftLeft(2);
 				break;
 			case TILT_RIGHT:
 				System.out.println("TILT_RIGHT");
+				newField = field;
+				differences = newField.shiftRight(1);
 				break;
 			case STEEP_TILT_RIGHT:
 				System.out.println("STEEP_TILT_RIGHT");
+				newField = field;
+				differences = newField.shiftRight(2);
 				break;
 			case TILT_FRONT:
 				System.out.println("TILT_FRONT");
+				newField = field;
+				differences = newField.shiftDown(1);
 				break;
 			case STEEP_TILT_FRONT:
 				System.out.println("STEEP_TILT_FRONT");
+				newField = field;
+				differences = newField.shiftDown(2);
 				break;
 			case TILT_BACK:
 				System.out.println("TILT_BACK");
+				newField = field;
+				differences = newField.shiftUp(1);
 				break;
 			case STEEP_TILT_BACK:
 				System.out.println("STEEP_TILT_BACK");
+				newField = field;
+				differences = newField.shiftUp(2);
 				break;
 			case DEFAULT:
 				System.out.println("No GyroRule was applicable");
@@ -165,9 +181,9 @@ public class Game {
 		} finally {
 			l.unlock();
 
-			System.out.println("Field unlocked by gyroRule");
+//			System.out.println("Field unlocked by gyroRule");
 		}
-		System.out.println("Field returned by gyroRule");
+//		System.out.println("Field returned by gyroRule");
 		return field;
 	}
 
@@ -184,6 +200,7 @@ public class Game {
 	public int getGenerationCount() {
 		return generationCount;
 	}
+	
 
 	public Tuple[] getDifferences() {
 		Tuple[] diff = new Tuple[differences.size()];
@@ -193,6 +210,10 @@ public class Game {
 			i++;
 		}
 		return diff;
+	}
+	
+	public Gyro getGyro(){
+		return gyro;
 	}
 
 }

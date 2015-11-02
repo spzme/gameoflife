@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Field {
 	private boolean[][] cells;
 	private int rows;
@@ -61,34 +63,40 @@ public class Field {
 		return aliveCellCount;
 	}
 
-	public void shiftLeft(int amount) {
-		shift(-amount, 0);
+	public ArrayList<Tuple> shiftLeft(int amount) {
+		return shift(-amount, 0);
 	}
 
-	public void shiftRight(int amount) {
-		shift(amount, 0);
+	public ArrayList<Tuple> shiftRight(int amount) {
+		return shift(amount, 0);
 	}
 
-	public void shiftUp(int amount) {
-		shift(0, amount);
+	public ArrayList<Tuple> shiftUp(int amount) {
+		return shift(0, amount);
 	}
 
-	public void shiftDown(int amount) {
-		shift(0, -amount);
+	public ArrayList<Tuple> shiftDown(int amount) {
+		return shift(0, -amount);
 	}
 
-	private void shift(int xAmount, int yAmount) {
+	private ArrayList<Tuple> shift(int xAmount, int yAmount) {
 		boolean[][] result = new boolean[columns][rows];
+		ArrayList<Tuple> differences = new ArrayList<Tuple>();
 		for (int x = 0; x < columns; x++) {
 			for (int y = 0; y < rows; y++) {
+				boolean oldState = cells[x][y];
 				if (x + xAmount >= columns || x + xAmount < 0
 						|| y + yAmount >= rows || y + yAmount < 0) {
 					result[x][y] = false;
 				} else {
 					result[x][y] = cells[x + xAmount][y + yAmount];
 				}
+				if(oldState != result[x][y]){
+					differences.add(new Tuple(x,y));
+				}
 			}
 		}
 		cells = result;
+		return differences;
 	}
 }

@@ -31,6 +31,7 @@ import figures.GliderGun;
 import figures.Pulsar;
 import figures.Toad;
 import model.Field;
+import model.GyroInput;
 import model.Rule;
 import model.Tuple;
 import sound.SoundController;
@@ -537,7 +538,7 @@ public class GUI extends JFrame {
 				try {
 					while (true) {
 						Thread.sleep(timeToWaitGyroInput);
-						game.receiveInputFromGyro();
+						insertGyroInput();
 					}
 				} catch (InterruptedException e) {
 					// Do nothing
@@ -633,5 +634,10 @@ public class GUI extends JFrame {
 
 	public int getYAngle() {
 		return yAngleSlider.getValue();
+	}
+	
+	//Only for testing purposes, not to be used in final project
+	public void insertGyroInput(){
+		game.getGyro().insertInput(new GyroInput(xAngleSlider.getValue(), yAngleSlider.getValue(), 0));
 	}
 }
