@@ -11,6 +11,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Font;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,6 +33,7 @@ import figures.Toad;
 import model.Field;
 import model.Rule;
 import model.Tuple;
+import sound.SoundController;
 import utils.CellColors;
 
 @SuppressWarnings("serial")
@@ -67,14 +69,17 @@ public class NewGUI extends JFrame {
 
 	private static final int ROW_BOUNDS = 100;
 	private static final int COLUMN_BOUNDS = 100;
-	
-	//Check for movements 4 times per second.
+
+	// Check for movements 4 times per second.
 	private static final int GYRO_RULE_FREQ = 4;
-	//Read gyro inputs 40 times per second.
+	// Read gyro inputs 40 times per second.
 	private static final int GYRO_INPUT_FREQ = 40;
-	
+
 	private JTextField stayAliveField;
 	private JTextField getAliveField;
+
+	private JSlider xAngleSlider;
+	private JSlider yAngleSlider;
 
 	/**
 	 * Launch the GUI.
@@ -339,7 +344,7 @@ public class NewGUI extends JFrame {
 		figureComboBox.addItem(new Toad());
 		figureComboBox.addItem(new Pulsar());
 		figureComboBox.addItem(new GliderGun());
-//		figureComboBox.addItem(new CircleOfFire());
+		// figureComboBox.addItem(new CircleOfFire());
 		FiguresBox.add(figureComboBox);
 
 		JButton createFigureButton = new JButton("Create");
@@ -376,42 +381,70 @@ public class NewGUI extends JFrame {
 		Component verticalStrut_12 = Box.createVerticalStrut(5);
 		FiguresBox.add(verticalStrut_12);
 		FiguresBox.add(createFigureButton);
-		
+
 		Component verticalStrut_13 = Box.createVerticalStrut(10);
 		FiguresBox.add(verticalStrut_13);
-		
+
 		JLabel lblNewLabel = new JLabel("Gyro controls");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		FiguresBox.add(lblNewLabel);
-		
+
 		Component verticalStrut_14 = Box.createVerticalStrut(5);
 		FiguresBox.add(verticalStrut_14);
-		
+
 		JLabel lblXAngle = new JLabel("X angle");
 		FiguresBox.add(lblXAngle);
-		
-		JSlider xAngleSlider = new JSlider();
+
+		Box horizontalBox_1 = Box.createHorizontalBox();
+		horizontalBox_1.setAlignmentX(Component.LEFT_ALIGNMENT);
+		FiguresBox.add(horizontalBox_1);
+
+		JLabel lblXValue = new JLabel("0");
+		xAngleSlider = new JSlider();
+		xAngleSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				lblXValue.setText(String.valueOf(xAngleSlider.getValue()));
+			}
+		});
+		horizontalBox_1.add(xAngleSlider);
 		xAngleSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
 		xAngleSlider.setMaximum(180);
 		xAngleSlider.setMinimum(-180);
 		xAngleSlider.setValue(0);
-		FiguresBox.add(xAngleSlider);
-		
+
+		horizontalBox_1.add(lblXValue);
+
 		Component verticalStrut_16 = Box.createVerticalStrut(5);
 		FiguresBox.add(verticalStrut_16);
-		
+
 		JLabel lblYAngle = new JLabel("Y angle");
 		FiguresBox.add(lblYAngle);
-		
-		JSlider yAngleSlider = new JSlider();
+
+		Box horizontalBox_2 = Box.createHorizontalBox();
+		horizontalBox_2.setAlignmentX(Component.LEFT_ALIGNMENT);
+		FiguresBox.add(horizontalBox_2);
+
+		JLabel lblYValue = new JLabel("0");
+		yAngleSlider = new JSlider();
+		yAngleSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				lblYValue.setText(String.valueOf(yAngleSlider.getValue()));
+			}
+
+		});
+		horizontalBox_2.add(yAngleSlider);
 		yAngleSlider.setMinimum(-180);
 		yAngleSlider.setMaximum(180);
 		yAngleSlider.setValue(0);
 		yAngleSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
-		FiguresBox.add(yAngleSlider);
+
+		horizontalBox_2.add(lblYValue);
 
 		this.pack();
 		this.setLocationRelativeTo(null);
+		playMusic();
 	}
 
 	private void generateField() {
@@ -484,30 +517,30 @@ public class NewGUI extends JFrame {
 				}
 			}
 		};
-		
+
 		long timeToWaitGyroRule = 1000 / GYRO_RULE_FREQ;
 		gyroRuleThread = new Thread() {
-			public void run(){
-				try{
-					while(true) {
+			public void run() {
+				try {
+					while (true) {
 						Thread.sleep(timeToWaitGyroRule);
 						checkGyroRule();
 					}
 				} catch (InterruptedException e) {
-					//Do nothing
+					// Do nothing
 				}
 			}
 		};
 		long timeToWaitGyroInput = 1000 / GYRO_INPUT_FREQ;
 		gyroInputThread = new Thread() {
 			public void run() {
-				try{
-					while(true){
+				try {
+					while (true) {
 						Thread.sleep(timeToWaitGyroInput);
 						game.receiveInputFromGyro();
 					}
-				} catch (InterruptedException e){
-					//Do nothing
+				} catch (InterruptedException e) {
+					// Do nothing
 				}
 			}
 		};
@@ -516,10 +549,10 @@ public class NewGUI extends JFrame {
 		gyroRuleThread.start();
 	}
 
-	public void checkGyroRule(){
+	public void checkGyroRule() {
 		updateGrid(game.applyGyroRule());
 	}
-	
+
 	public void stopGame() {
 		startButton.setText("Start");
 		displayCellsAlive(0);
@@ -576,5 +609,29 @@ public class NewGUI extends JFrame {
 
 	private void displayGenerationCount() {
 		lblGenerationCounter.setText("Generation " + game.getGenerationCount());
+	}
+
+	private void playMusic() {
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				try {
+					SoundController.playAudio(true);
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		t.start();
+	}
+
+	public int getXAngle() {
+		return xAngleSlider.getValue();
+	}
+
+	public int getYAngle() {
+		return yAngleSlider.getValue();
 	}
 }
