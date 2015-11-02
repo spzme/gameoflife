@@ -24,7 +24,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import figures.Blinker;
-import figures.CircleOfFire;
 import figures.Figure;
 import figures.Glider;
 import figures.GliderGun;
@@ -323,15 +322,15 @@ public class NewGUI extends JFrame {
 		JPanel extraPanel = new JPanel();
 		contentPane.add(extraPanel, BorderLayout.EAST);
 
-		Box verticalBox_1 = Box.createVerticalBox();
-		extraPanel.add(verticalBox_1);
+		Box FiguresBox = Box.createVerticalBox();
+		extraPanel.add(FiguresBox);
 
 		JLabel figureLabel = new JLabel("Figures");
 		figureLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		verticalBox_1.add(figureLabel);
+		FiguresBox.add(figureLabel);
 
 		Component verticalStrut_11 = Box.createVerticalStrut(5);
-		verticalBox_1.add(verticalStrut_11);
+		FiguresBox.add(verticalStrut_11);
 
 		JComboBox<Figure> figureComboBox = new JComboBox<Figure>();
 		figureComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -341,7 +340,7 @@ public class NewGUI extends JFrame {
 		figureComboBox.addItem(new Pulsar());
 		figureComboBox.addItem(new GliderGun());
 //		figureComboBox.addItem(new CircleOfFire());
-		verticalBox_1.add(figureComboBox);
+		FiguresBox.add(figureComboBox);
 
 		JButton createFigureButton = new JButton("Create");
 		createFigureButton.addActionListener(new ActionListener() {
@@ -375,8 +374,41 @@ public class NewGUI extends JFrame {
 		});
 
 		Component verticalStrut_12 = Box.createVerticalStrut(5);
-		verticalBox_1.add(verticalStrut_12);
-		verticalBox_1.add(createFigureButton);
+		FiguresBox.add(verticalStrut_12);
+		FiguresBox.add(createFigureButton);
+		
+		Component verticalStrut_13 = Box.createVerticalStrut(10);
+		FiguresBox.add(verticalStrut_13);
+		
+		JLabel lblNewLabel = new JLabel("Gyro controls");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		FiguresBox.add(lblNewLabel);
+		
+		Component verticalStrut_14 = Box.createVerticalStrut(5);
+		FiguresBox.add(verticalStrut_14);
+		
+		JLabel lblXAngle = new JLabel("X angle");
+		FiguresBox.add(lblXAngle);
+		
+		JSlider xAngleSlider = new JSlider();
+		xAngleSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
+		xAngleSlider.setMaximum(180);
+		xAngleSlider.setMinimum(-180);
+		xAngleSlider.setValue(0);
+		FiguresBox.add(xAngleSlider);
+		
+		Component verticalStrut_16 = Box.createVerticalStrut(5);
+		FiguresBox.add(verticalStrut_16);
+		
+		JLabel lblYAngle = new JLabel("Y angle");
+		FiguresBox.add(lblYAngle);
+		
+		JSlider yAngleSlider = new JSlider();
+		yAngleSlider.setMinimum(-180);
+		yAngleSlider.setMaximum(180);
+		yAngleSlider.setValue(0);
+		yAngleSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
+		FiguresBox.add(yAngleSlider);
 
 		this.pack();
 		this.setLocationRelativeTo(null);
@@ -397,7 +429,6 @@ public class NewGUI extends JFrame {
 
 				game = new Game(new Field(columns, rows), new Rule(
 						stayAliveField.getText(), getAliveField.getText()));
-				System.out.println("Columns: " + columns + " Rows: " + rows);
 				cells = new Cell[columns][rows];
 				// Set the vgap and hgap to -1 to reduce waste of space around
 				// cells
