@@ -28,6 +28,7 @@ public class Game {
 
 	public Field nextGeneration() {
 		l.lock();
+		System.out.println("field locked by nextGeneration");
 		try {
 			differences = new ArrayList<Tuple>();
 			generationCount++;
@@ -87,7 +88,6 @@ public class Game {
 					// alive state of cell.
 					if (field.getAliveState(x, y)) {
 						newState = rule.getLiveNextState(neighbours);
-
 					} else {
 						newState = rule.getDeadNextState(neighbours);
 					}
@@ -101,10 +101,15 @@ public class Game {
 					}
 				}
 			}
+			newField.printField();
 			field = newField;
 		} finally {
 			l.unlock();
+			System.out.println("field unlocked by nextGeneration");
 		}
+
+		System.out.println("Field returned by nextGeneration");
+//		field.printField();
 		return field;
 	}
 
@@ -112,9 +117,14 @@ public class Game {
 		gyro.receiveInput();
 	}
 
+	public void clearGyroInputHistory(){
+		gyro.clearInputHistory();
+	}
+	
 	// Alter the field based on a gyro rule that is applicable at the moment.
 	public Field applyGyroRule() {
 		l.lock();
+		System.out.println("Field locked by gyroRule");
 		try {
 			differences = new ArrayList<Tuple>();
 			previousField = field;
@@ -149,13 +159,17 @@ public class Game {
 			case DEFAULT:
 				System.out.println("No GyroRule was applicable");
 				// Don't do anything
+				newField = field;
 				break;
 			}
 
 			field = newField;
 		} finally {
 			l.unlock();
+
+			System.out.println("Field unlocked by gyroRule");
 		}
+		System.out.println("Field returned by gyroRule");
 		return field;
 	}
 

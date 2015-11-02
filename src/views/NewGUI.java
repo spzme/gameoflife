@@ -497,6 +497,15 @@ public class NewGUI extends JFrame {
 			generatingThread.interrupt();
 			generatingThread = null;
 		}
+		if (gyroInputThread != null) {
+			gyroInputThread.interrupt();
+			generatingThread = null;
+			game.clearGyroInputHistory();
+		}
+		if (gyroRuleThread != null) {
+			gyroRuleThread.interrupt();
+			gyroRuleThread = null;
+		}
 	}
 
 	public Color getAliveColor() {

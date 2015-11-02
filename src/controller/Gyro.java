@@ -28,6 +28,10 @@ public class Gyro {
 		return input;
 	}
 	
+	public void clearInputHistory(){
+		inputs = new GyroInput[INPUTCOUNT];
+	}
+	
 	public void insertInput(GyroInput input){
 		//System.out.println("An input was added");
 		GyroInput[] newInputs = new GyroInput[INPUTCOUNT];
