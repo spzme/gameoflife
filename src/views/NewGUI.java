@@ -38,6 +38,7 @@ import utils.CellColors;
 @SuppressWarnings("serial")
 public class NewGUI extends JFrame {
 	private Thread generatingThread;
+	private Thread gyroThread;
 	private Game game;
 	private Cell[][] cells;
 	// Color variables so the user has can determine the color of the cells
@@ -66,6 +67,9 @@ public class NewGUI extends JFrame {
 
 	private static final int ROW_BOUNDS = 100;
 	private static final int COLUMN_BOUNDS = 100;
+	
+	//Check for movements 4 times per second.
+	private static final int GYRO_FREQ = 4;
 
 	private JTextField stayAliveField;
 	private JTextField getAliveField;
@@ -446,9 +450,28 @@ public class NewGUI extends JFrame {
 				}
 			}
 		};
+		
+		long timeToWaitGyro = 1000 / GYRO_FREQ;
+		gyroThread = new Thread() {
+			public void run(){
+				try{
+					while(true) {
+						Thread.sleep(timeToWaitGyro);
+						checkGyroRule();
+					}
+				} catch (InterruptedException e) {
+					//Do nothing
+				}
+			}
+		};
 		generatingThread.start();
+		gyroThread.start();
 	}
 
+	public void checkGyroRule(){
+		updateGrid(game.applyGyroRule());
+	}
+	
 	public void stopGame() {
 		startButton.setText("Start");
 		displayCellsAlive(0);

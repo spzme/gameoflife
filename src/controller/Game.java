@@ -103,6 +103,8 @@ public class Game {
 		return field;
 	}
 
+	
+	//Alter the field based on a gyro rule that is applicable at the moment.
 	public Field applyGyroRule(){
 		l.lock();
 		try{
@@ -112,30 +114,31 @@ public class Game {
 			GyroRule rule = gyro.checkMovement();
 			switch(rule){
 			case TILT_LEFT:
-					
+				System.out.println("TILT_LEFT");
 				break;
-			case FAST_TILT_LEFT:
-				
+			case STEEP_TILT_LEFT:
+				System.out.println("STEEP_TILT_LEFT");
 				break;
 			case TILT_RIGHT:
-				
+				System.out.println("TILT_RIGHT");
 				break;
-			case FAST_TILT_RIGHT:
-				
+			case STEEP_TILT_RIGHT:
+				System.out.println("STEEP_TILT_RIGHT");
 				break;
 			case TILT_FRONT:
-				
+				System.out.println("TILT_FRONT");
 				break;
-			case FAST_TILT_FRONT:
-				
+			case STEEP_TILT_FRONT:
+				System.out.println("STEEP_TILT_FRONT");
 				break;
 			case TILT_BACK:
-				
+				System.out.println("TILT_BACK");
 				break;
-			case FAST_TILT_BACK:
-					
+			case STEEP_TILT_BACK:
+				System.out.println("STEEP_TILT_BACK");
 				break;
 			case DEFAULT:
+				System.out.println("No GyroRule was applicable");
 				//Don't do anything
 				break;
 			}
