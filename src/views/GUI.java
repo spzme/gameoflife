@@ -24,6 +24,8 @@ import javax.swing.JComboBox;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import communication.CommunicationController;
+import communication.PinException;
 import figures.Blinker;
 import figures.Figure;
 import figures.Glider;
@@ -94,6 +96,14 @@ public class GUI extends JFrame {
 	}
 
 	public GUI() {
+
+		try {
+			CommunicationController.init();
+		} catch (PinException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Game of Life");
 

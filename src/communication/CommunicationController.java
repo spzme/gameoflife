@@ -10,19 +10,19 @@ import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class CommunicationController {
-	private GpioController gpio;
-	private GpioPinDigitalMultipurpose bit0;
-	private GpioPinDigitalMultipurpose bit1;
-	private GpioPinDigitalMultipurpose bit2;
-	private GpioPinDigitalMultipurpose bit3;
-	private GpioPinDigitalMultipurpose bit4;
-	private GpioPinDigitalMultipurpose bit5;
-	private GpioPinDigitalMultipurpose bit6;
-	private GpioPinDigitalMultipurpose bit7;
-	private GpioPinDigitalOutput readWrite;
-	private GpioPinDigitalOutput enableDisable;
+	private static GpioController gpio;
+	private static GpioPinDigitalMultipurpose bit0;
+	private static GpioPinDigitalMultipurpose bit1;
+	private static GpioPinDigitalMultipurpose bit2;
+	private static GpioPinDigitalMultipurpose bit3;
+	private static GpioPinDigitalMultipurpose bit4;
+	private static GpioPinDigitalMultipurpose bit5;
+	private static GpioPinDigitalMultipurpose bit6;
+	private static GpioPinDigitalMultipurpose bit7;
+	private static GpioPinDigitalOutput readWrite;
+	private static GpioPinDigitalOutput enableDisable;
 
-	public CommunicationController() throws PinException {
+	public static void init() throws PinException {
 		gpio = GpioFactory.getInstance();
 		
 		bit0 = gpio.provisionDigitalMultipurposePin(CommunicationController
@@ -48,23 +48,23 @@ public class CommunicationController {
 				.getPin(23));
 	}
 
-	public void setEnabled() {
+	public static void setEnabled() {
 		enableDisable.high();
 	}
 
-	public void setDisabled() {
+	public static void setDisabled() {
 		enableDisable.low();
 	}
 
-	public void setRead() {
+	public static void setRead() {
 		readWrite.high();
 	}
 
-	public void setWrite() {
+	public static void setWrite() {
 		readWrite.low();
 	}
 	
-	public void setByte(Byte b) throws PinException {
+	public static void setByte(Byte b) throws PinException {
 		bit0.setMode(PinMode.DIGITAL_OUTPUT);
 		bit1.setMode(PinMode.DIGITAL_OUTPUT);
 		bit2.setMode(PinMode.DIGITAL_OUTPUT);
@@ -87,7 +87,7 @@ public class CommunicationController {
 		}
 	}
 
-	public Byte getByte() throws PinException {
+	public static Byte getByte() throws PinException {
 		bit0.setMode(PinMode.DIGITAL_INPUT);
 		bit1.setMode(PinMode.DIGITAL_INPUT);
 		bit2.setMode(PinMode.DIGITAL_INPUT);
@@ -110,7 +110,7 @@ public class CommunicationController {
 		return result;
 	}
 
-	private GpioPinDigitalMultipurpose[] getBytePins() {
+	private static GpioPinDigitalMultipurpose[] getBytePins() {
 		GpioPinDigitalMultipurpose[] result = new GpioPinDigitalMultipurpose[8];
 		result[0] = bit0;
 		result[1] = bit1;
@@ -150,7 +150,7 @@ public class CommunicationController {
 		}
 	}
 
-	public byte getGyroInformation(){
+	public static byte getGyroInformation(){
 		byte b = 0;
 		setRead();
 		setEnabled();
