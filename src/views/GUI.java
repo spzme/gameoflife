@@ -580,6 +580,7 @@ public class GUI extends JFrame {
 			gyroRuleThread.interrupt();
 			gyroRuleThread = null;
 		}
+		updateGridTotally(game.getField());
 	}
 
 	public Color getAliveColor() {
