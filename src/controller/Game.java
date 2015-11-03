@@ -116,38 +116,34 @@ public class Game {
 			switch (rule) {
 			case TILT_LEFT:
 				System.out.println("TILT_LEFT");
-				field.shiftLeft(1);
+				differences = field.shiftLeft();
 				break;
 			case TILT_FRONT_LEFT:
 				System.out.println("TILT_FRONT_LEFT");
-				field.shiftDown(1);
-				field.shiftLeft(1);
+				differences = field.shiftDownLeft();
 				break;
 			case TILT_BACK_LEFT:
 				System.out.println("TILT_BACK_LEFT");
-				field.shiftUp(1);
-				field.shiftLeft(1);
+				differences = field.shiftUpLeft();
 				break;
 			case TILT_RIGHT:
 				System.out.println("TILT_RIGHT");
-				field.shiftRight(1);
+				differences = field.shiftRight();
 				break;
 			case TILT_FRONT_RIGHT:
 				System.out.println("TILT_FRONT_RIGHT");
-				field.shiftDown(1);
-				field.shiftRight(1);
+				differences = field.shiftDownRight();
 				break;
 			case TILT_BACK_RIGHT:
 				System.out.println("TILT_BACK_RIGHT");
-				field.shiftUp(1);
-				field.shiftRight(1);
+				differences = field.shiftUpRight();
 			case TILT_FRONT:
 				System.out.println("TILT_FRONT");
-				field.shiftDown(1);
+				differences = field.shiftDown();
 				break;
 			case TILT_BACK:
 				System.out.println("TILT_BACK");
-				field.shiftUp(1);
+				differences = field.shiftUp();
 				break;
 			case DEFAULT:
 				// Don't do anything
