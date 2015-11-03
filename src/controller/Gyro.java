@@ -9,17 +9,23 @@ public class Gyro {
 	static final int INPUTCOUNT = 10;
 	static final int MOVEMENT_TRESHOLD = 10; //when it is considered a movement
 	static final int INTENSITY_TRESHOLD = 40; //when it is considered a strong movement
-
+	boolean initialized = false;
+	
 	CommunicationController controller;
 	
 	public GyroInput[] inputs;
 	
 	public Gyro(){
 		inputs = new GyroInput[INPUTCOUNT];
+		if(!initialized){
 		try {
 			controller = new CommunicationController();
+			initialized = true;
 		} catch (PinException e) {
-			e.printStackTrace();
+			//bla
+		}
+		} else {
+			System.out.println("The controller already exists! I will not make a new one");
 		}
 	}
 	
