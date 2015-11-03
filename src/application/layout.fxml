@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.media.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <GridPane id="cellGrid" BorderPane.alignment="CENTER">
+      </GridPane>
+   </center>
+   <left>
+      <Pane nodeOrientation="LEFT_TO_RIGHT" BorderPane.alignment="CENTER">
+         <children>
+            <VBox>
+               <children>
+                  <Label text="Settings">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font></Label>
+                  <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                  <Label text="Cell properties">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+                  <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                  <Label text="Neighbours to stay alive" />
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <CheckBox id="stayAliveBox0" mnemonicParsing="false" text="0" />
+                        <CheckBox id="stayAliveBox1" mnemonicParsing="false" text="1" />
+                        <CheckBox id="stayAliveBox2" mnemonicParsing="false" selected="true" text="2" />
+                        <CheckBox id="stayAliveBox3" mnemonicParsing="false" selected="true" text="3" />
+                        <CheckBox id="stayAliveBox4" mnemonicParsing="false" text="4" />
+                        <CheckBox id="stayAliveBox5" mnemonicParsing="false" text="5" />
+                        <CheckBox id="stayAliveBox6" mnemonicParsing="false" text="6" />
+                        <CheckBox id="stayAliveBox7" mnemonicParsing="false" text="7" />
+                        <CheckBox id="stayAliveBox8" mnemonicParsing="false" text="8" />
+                     </children>
+                  </HBox>
+                  <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                  <Label text="Neighbours to get alive" />
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <CheckBox id="getAliveBox0" mnemonicParsing="false" text="0" />
+                        <CheckBox id="getAliveBox1" mnemonicParsing="false" text="1" />
+                        <CheckBox id="getAliveBox2" mnemonicParsing="false" text="2" />
+                        <CheckBox id="getAliveBox3" mnemonicParsing="false" selected="true" text="3" />
+                        <CheckBox id="getAliveBox4" mnemonicParsing="false" text="4" />
+                        <CheckBox id="getAliveBox5" mnemonicParsing="false" text="5" />
+                        <CheckBox id="getAliveBox6" mnemonicParsing="false" text="6" />
+                        <CheckBox id="getAliveBox7" mnemonicParsing="false" text="7" />
+                        <CheckBox id="getAliveBox8" mnemonicParsing="false" text="8" />
+                     </children>
+                  </HBox>
+                  <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
+                  <Label text="Field properties">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+                  <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                  <Label text="Rows" />
+                  <TextField id="rowInputField" text="10" />
+                  <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                  <Label text="Columns" />
+                  <TextField id="columnInputField" text="10" />
+                  <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
+                  <Label text="Speed">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <HBox>
+                     <children>
+                        <Slider id="speedSlider" majorTickUnit="1.0" max="20.0" min="1.0" value="1.0" />
+                        <Label id="speedValue" text="1">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
+                  <Label text="Colors">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                  <Label text="Color when cell is alive" />
+                  <ColorPicker id="aliveColorPicker" />
+                  <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                  <Label text="Color when cell is dead" />
+                  <ColorPicker id="deadColorPicker" />
+                  <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                  <Label text="Color when cell has lived" />
+                  <ColorPicker id="hasLivedColorPicker" />
+                  <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                  <Label text="Figure">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <ComboBox id="figurePicker" prefWidth="150.0" />
+                  <Separator orientation="VERTICAL" prefHeight="15.0" visible="false" />
+                  <Button id="generateButton" mnemonicParsing="false" text="Generate" />
+               </children>
+            </VBox>
+         </children>
+         <BorderPane.margin>
+            <Insets left="10.0" right="10.0" />
+         </BorderPane.margin>
+      </Pane>
+   </left>
+   <padding>
+      <Insets bottom="10.0" top="10.0" />
+   </padding>
+   <bottom>
+      <Pane maxWidth="-Infinity" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" fillHeight="false" maxWidth="-Infinity">
+               <children>
+                  <Label id="generationCounterLabel" text="Generation 0" />
+                  <Separator prefWidth="10.0" visible="false" />
+                  <Button id="previousButton" mnemonicParsing="false" text="&lt;" />
+                  <Separator prefWidth="5.0" visible="false" />
+                  <Button id="startButton" mnemonicParsing="false" text="Start" />
+                  <Separator prefWidth="5.0" visible="false" />
+                  <Button id="nextButton" mnemonicParsing="false" text="&gt;" />
+                  <Separator prefWidth="10.0" visible="false" />
+                  <Label id="cellsAliveLabel" text="0 cells alive" />
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </HBox>
+         </children>
+      </Pane>
+   </bottom>
+</BorderPane>
