@@ -1,9 +1,10 @@
-package controller;
+ package controller;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import communication.PinException;
 import model.*;
 
 public class Game {
@@ -19,7 +20,11 @@ public class Game {
 		this.field = field;
 		previousField = field;
 		generationCount = 1;
+		try {
 		gyro = new Gyro();
+		} catch (PinException e){
+			e.printStackTrace();
+		}
 		l = new ReentrantLock();
 		differences = new ArrayList<Tuple>();
 		this.rule = rule;
@@ -27,7 +32,6 @@ public class Game {
 
 	public Field nextGeneration() {
 		l.lock();
-//		System.out.println("field locked by nextGeneration");
 		try {
 			differences = new ArrayList<Tuple>();
 			generationCount++;
@@ -104,11 +108,7 @@ public class Game {
 			field = newField;
 		} finally {
 			l.unlock();
-//			System.out.println("field unlocked by nextGeneration");
 		}
-
-//		System.out.println("Field returned by nextGeneration");
-		// field.printField();
 		return field;
 	}
 
@@ -123,7 +123,6 @@ public class Game {
 	// Alter the field based on a gyro rule that is applicable at the moment.
 	public Field applyGyroRule() {
 		l.lock();
-//		System.out.println("Field locked by gyroRule");
 		try {
 			previousField = field;
 			Field newField = new Field(field.getColumnCount(),
@@ -180,10 +179,7 @@ public class Game {
 			field = newField;
 		} finally {
 			l.unlock();
-
-//			System.out.println("Field unlocked by gyroRule");
 		}
-//		System.out.println("Field returned by gyroRule");
 		return field;
 	}
 
