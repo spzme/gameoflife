@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
+import javafx.scene.paint.Color;
+
 public class Field {
 	private boolean[][] cells;
 	private int rows;
@@ -85,14 +87,13 @@ public class Field {
 		for (int x = 0; x < columns; x++) {
 			for (int y = 0; y < rows; y++) {
 				boolean oldState = cells[x][y];
-				if (x + xAmount >= columns || x + xAmount < 0
-						|| y + yAmount >= rows || y + yAmount < 0) {
+				if (x + xAmount >= columns || x + xAmount < 0 || y + yAmount >= rows || y + yAmount < 0) {
 					result[x][y] = false;
 				} else {
 					result[x][y] = cells[x + xAmount][y + yAmount];
 				}
-				if(oldState != result[x][y]){
-					differences.add(new Tuple(x,y));
+				if (oldState != result[x][y]) {
+					differences.add(new Tuple(x, y));
 				}
 			}
 		}
