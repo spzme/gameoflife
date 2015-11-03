@@ -21,7 +21,6 @@ public class Game {
 	}
 	public Field nextGeneration() {
 		l.lock();
-		System.out.println("field locked by nextGeneration");
 		try {
 			differences = new ArrayList<Tuple>();
 			generationCount++;
@@ -93,14 +92,10 @@ public class Game {
 					}
 				}
 			}
-			newField.printField();
 			field = newField;
 		} finally {
 			l.unlock();
-			System.out.println("field unlocked by nextGeneration");
 		}
-		System.out.println("Field returned by nextGeneration");
-		// field.printField();
 		return field;
 	}
 	public void receiveInputFromGyro() {
@@ -121,26 +116,38 @@ public class Game {
 			switch (rule) {
 			case TILT_LEFT:
 				System.out.println("TILT_LEFT");
+				field.shiftLeft(1);
 				break;
 			case TILT_FRONT_LEFT:
 				System.out.println("TILT_FRONT_LEFT");
+				field.shiftDown(1);
+				field.shiftLeft(1);
 				break;
 			case TILT_BACK_LEFT:
 				System.out.println("TILT_BACK_LEFT");
+				field.shiftUp(1);
+				field.shiftLeft(1);
 				break;
 			case TILT_RIGHT:
 				System.out.println("TILT_RIGHT");
+				field.shiftRight(1);
 				break;
 			case TILT_FRONT_RIGHT:
 				System.out.println("TILT_FRONT_RIGHT");
+				field.shiftDown(1);
+				field.shiftRight(1);
 				break;
 			case TILT_BACK_RIGHT:
 				System.out.println("TILT_BACK_RIGHT");
+				field.shiftUp(1);
+				field.shiftRight(1);
 			case TILT_FRONT:
 				System.out.println("TILT_FRONT");
+				field.shiftDown(1);
 				break;
 			case TILT_BACK:
 				System.out.println("TILT_BACK");
+				field.shiftUp(1);
 				break;
 			case DEFAULT:
 				// Don't do anything
