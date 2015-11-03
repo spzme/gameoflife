@@ -47,9 +47,9 @@ public class Gyro {
 	// returns the rule the game should use according to the gyro inputs
 	public GyroRule checkMovement() {
 		byte b = CommunicationController.getGyroInformation();
-		System.out.println(b);
 		byte xAngle = (byte) (b & 0b11);
 		byte yAngle = (byte) ((b >> 2) & 0b11);
+		System.out.println("Received byte: " + b + " xAngle: " + xAngle + " yAngle: " + yAngle);
 
 		if (xAngle == 0b01) {
 			if (yAngle == 0b01) {
