@@ -150,16 +150,17 @@ public class CommunicationController {
 		}
 	}
 
-	public int getGyroRule(){
-		setEnabled();
+	public byte getGyroInformation(){
+		byte b = 0;
 		setRead();
-		byte result = 0;
+		setEnabled();
 		try {
-			result = getByte();
+			b = getByte();
 		} catch (PinException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return (int) result;
+		setDisabled();
+		return b;
 	}
 }
