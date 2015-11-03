@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 
-import javafx.scene.paint.Color;
 
 public class Field {
 	private boolean[][] cells;
