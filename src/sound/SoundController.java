@@ -29,7 +29,7 @@ public class SoundController {
 	}
 	
 	public static void playAudio(boolean loopBoolean) throws InterruptedException, IOException {
-		playAudio(new File("130-bpm-electro-synth-loop.wav"), loopBoolean);
+		playAudio(new File("backgroundMusic.wav"), loopBoolean);
 	}
 
 	public static void stopAudio(File file) throws IOException {

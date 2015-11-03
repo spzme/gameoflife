@@ -1,22 +1,23 @@
 package views;
 
-import javax.swing.JButton;
+import javafx.scene.control.Button;
+import utils.ColorConverter;
+import application.Main;
 
-@SuppressWarnings("serial")
-public class Cell extends JButton {
+public class Cell extends Button {
 
 	// A boolean to indicate whether the cell is currently alive or dead
 	private boolean alive;
 	// A boolean to indicate if the cell has ever lived
 	private boolean hasLived;
-	private GUI gui;
+	private Main gui;
 
-	public Cell(GUI newGUI) {
+	public Cell(Main newGUI) {
 		super();
 		this.gui = newGUI;
 		alive = false;
 		hasLived = false;
-		setBackground(gui.getDeadColor());
+		setStyle(ColorConverter.getColor(gui.getDeadColor()));
 	}
 
 	public void setAlive(boolean b) {
@@ -30,7 +31,7 @@ public class Cell extends JButton {
 	public void setAlive() {
 		alive = true;
 		hasLived = true;
-		this.setBackground(gui.getAliveColor());
+		setStyle(ColorConverter.getColor(gui.getAliveColor()));
 	}
 
 	public void setDead() {
@@ -45,28 +46,28 @@ public class Cell extends JButton {
 	public boolean hasLived() {
 		return hasLived;
 	}
-	
+
 	public void toggleState() {
-		//!Only for use by the GUI!
+		// !Only for use by the GUI!
 		if (alive) {
 			alive = false;
 			hasLived = false;
-			setBackground(gui.getDeadColor());
+			setStyle(ColorConverter.getColor(gui.getDeadColor()));
 		} else {
 			alive = true;
 			hasLived = true;
-			setBackground(gui.getAliveColor());
+			setStyle(ColorConverter.getColor(gui.getAliveColor()));
 		}
 	}
-	
-	//update representation of cell in GUI.
-	public void updateColor(){
+
+	// update representation of cell in GUI.
+	public void updateColor() {
 		if (alive) {
-			setBackground(gui.getAliveColor());
+			setStyle(ColorConverter.getColor(gui.getAliveColor()));
 		} else if (hasLived) {
-			setBackground(gui.getHasLivedColor());
+			setStyle(ColorConverter.getColor(gui.getHasLivedColor()));
 		} else {
-			setBackground(gui.getDeadColor());
+			setStyle(ColorConverter.getColor(gui.getDeadColor()));
 		}
 	}
 

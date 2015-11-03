@@ -1,7 +1,5 @@
 package controller;
 
-import communication.CommunicationController;
-import communication.PinException;
 import model.GyroInput;
 import model.GyroRule;
 
@@ -9,18 +7,11 @@ public class Gyro {
 	static final int INPUTCOUNT = 10;
 	static final int MOVEMENT_TRESHOLD = 10; //when it is considered a movement
 	static final int INTENSITY_TRESHOLD = 40; //when it is considered a strong movement
-
-	CommunicationController controller;
 	
 	public GyroInput[] inputs;
 	
-	public Gyro() throws PinException{
+	public Gyro(){
 		inputs = new GyroInput[INPUTCOUNT];
-		try {
-			controller = new CommunicationController();
-		} catch (PinException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public GyroInput receiveInput(){
@@ -52,7 +43,7 @@ public class Gyro {
 	}
 	
 	//returns the rule the game should use according to the gyro inputs
-		public GyroRule checkMovementOld(){
+		public GyroRule checkMovement(){
 			if(inputs[INPUTCOUNT-1] == null){
 				System.out.println("Don't have enough gyroInputs yet in history to determine movement");
 				return GyroRule.DEFAULT;
@@ -60,6 +51,7 @@ public class Gyro {
 			//Check for left tilts
 			if (inputs[0].angleX > inputs[INPUTCOUNT - 1].angleX + MOVEMENT_TRESHOLD){
 				//left tilt occurred
+				//check intensity
 				if(inputs[0].angleX > inputs[INPUTCOUNT - 1].angleX + INTENSITY_TRESHOLD){
 					return GyroRule.STEEP_TILT_LEFT;
 				} else {
@@ -70,6 +62,7 @@ public class Gyro {
 			//TODO: take into account that from 0 to 360 is only one degree difference
 			if (inputs[0].angleX < inputs[INPUTCOUNT - 1].angleX - MOVEMENT_TRESHOLD){
 				//right tilt occurred
+				//check intensity
 				if(inputs[0].angleX < inputs[INPUTCOUNT - 1].angleX + INTENSITY_TRESHOLD){
 					return GyroRule.STEEP_TILT_RIGHT;
 				} else {
@@ -77,9 +70,10 @@ public class Gyro {
 				}
 			}
 			//check for front tilts
-			if(inputs[0].angleY > inputs[INPUTCOUNT - 1].angleY + MOVEMENT_TRESHOLD){
+			if(inputs[0].angleY < inputs[INPUTCOUNT - 1].angleY - MOVEMENT_TRESHOLD){
 				//front tilt occured
-				if(inputs[0].angleY > inputs[INPUTCOUNT-1].angleY + INTENSITY_TRESHOLD){
+				//check intensity
+				if(inputs[0].angleY < inputs[INPUTCOUNT-1].angleY - INTENSITY_TRESHOLD){
 					return GyroRule.STEEP_TILT_FRONT;
 				} else {
 					return GyroRule.TILT_FRONT;
@@ -87,9 +81,10 @@ public class Gyro {
 			}
 			//check for back tilts
 			//TODO: take into account that from 0 to 360 is only one degree difference
-			if(inputs[0].angleY < inputs[INPUTCOUNT - 1].angleY - MOVEMENT_TRESHOLD){
+			if(inputs[0].angleY > inputs[INPUTCOUNT - 1].angleY + MOVEMENT_TRESHOLD){
 				//back tilt occured
-				if(inputs[0].angleY < inputs[INPUTCOUNT - 1].angleY - INTENSITY_TRESHOLD){
+				//check intensity
+				if(inputs[0].angleY > inputs[INPUTCOUNT - 1].angleY + INTENSITY_TRESHOLD){
 					return GyroRule.STEEP_TILT_BACK;
 				}	else { 
 					return GyroRule.TILT_BACK;
@@ -98,8 +93,5 @@ public class Gyro {
 			
 			
 			return GyroRule.DEFAULT;
-		}
-		public GyroRule checkMovement(){
-			return GyroRule.getByValue(controller.getGyroRule());
 		}
 }

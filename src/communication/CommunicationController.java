@@ -63,7 +63,7 @@ public class CommunicationController {
 	public void setWrite() {
 		readWrite.low();
 	}
-	
+
 	public void setByte(Byte b) throws PinException {
 		bit0.setMode(PinMode.DIGITAL_OUTPUT);
 		bit1.setMode(PinMode.DIGITAL_OUTPUT);
@@ -150,16 +150,4 @@ public class CommunicationController {
 		}
 	}
 
-	public int getGyroRule(){
-		setEnabled();
-		setRead();
-		byte result = 0;
-		try {
-			result = getByte();
-		} catch (PinException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return (int) result;
-	}
 }
