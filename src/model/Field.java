@@ -64,20 +64,36 @@ public class Field {
 		return aliveCellCount;
 	}
 
-	public ArrayList<Tuple> shiftLeft(int amount) {
-		return shift(-amount, 0);
+	public ArrayList<Tuple> shiftLeft() {
+		return shift(-1, 0);
 	}
 
-	public ArrayList<Tuple> shiftRight(int amount) {
-		return shift(amount, 0);
+	public ArrayList<Tuple> shiftRight() {
+		return shift(1, 0);
 	}
 
-	public ArrayList<Tuple> shiftUp(int amount) {
-		return shift(0, amount);
+	public ArrayList<Tuple> shiftUp() {
+		return shift(0, 1);
 	}
 
-	public ArrayList<Tuple> shiftDown(int amount) {
-		return shift(0, -amount);
+	public ArrayList<Tuple> shiftDown() {
+		return shift(0, -1);
+	}
+	
+	public ArrayList<Tuple> shiftDownLeft() {
+		return shift(-1, -1);
+	}
+	
+	public ArrayList<Tuple> shiftUpLeft() {
+		return shift(-1, 1);
+	}
+	
+	public ArrayList<Tuple> shiftDownRight() {
+		return shift(1, -1);
+	}
+	
+	public ArrayList<Tuple> shiftUpRight() {
+		return shift(1, 1);
 	}
 
 	private ArrayList<Tuple> shift(int xAmount, int yAmount) {
