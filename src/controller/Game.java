@@ -112,7 +112,6 @@ public class Game {
 	// Alter the field based on a gyro rule that is applicable at the moment.
 	public Field applyGyroRule() {
 		l.lock();
-		System.out.println("Field locked by gyroRule");
 		try {
 			differences = new ArrayList<Tuple>();
 			previousField = field;
@@ -144,7 +143,6 @@ public class Game {
 				System.out.println("TILT_BACK");
 				break;
 			case DEFAULT:
-				System.out.println("No GyroRule was applicable");
 				// Don't do anything
 				newField = field;
 				break;
@@ -152,9 +150,7 @@ public class Game {
 			field = newField;
 		} finally {
 			l.unlock();
-			System.out.println("Field unlocked by gyroRule");
 		}
-		System.out.println("Field returned by gyroRule");
 		return field;
 	}
 	public Field previousGeneration() {
