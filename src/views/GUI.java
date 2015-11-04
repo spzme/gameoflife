@@ -5,6 +5,7 @@ import controller.Game;
 import java.awt.EventQueue;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
 import java.awt.Component;
@@ -30,6 +31,7 @@ import figures.Blinker;
 import figures.Figure;
 import figures.Glider;
 import figures.GliderGun;
+import figures.None;
 import figures.Pulsar;
 import figures.Toad;
 import model.Field;
@@ -97,12 +99,12 @@ public class GUI extends JFrame {
 
 	public GUI() {
 
-		try {
-			CommunicationController.init();
-		} catch (PinException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		 try {
+		 CommunicationController.init();
+		 } catch (PinException e1) {
+		 // TODO Auto-generated catch block
+		 e1.printStackTrace();
+		 }
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Game of Life");
@@ -287,13 +289,52 @@ public class GUI extends JFrame {
 		Component verticalStrut_3 = Box.createVerticalStrut(20);
 		verticalBox.add(verticalStrut_3);
 
+		JComboBox<Figure> figureComboBox = new JComboBox<Figure>();
+		figureComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		figureComboBox.addItem(new None());
+		figureComboBox.addItem(new Glider());
+		figureComboBox.addItem(new Blinker());
+		figureComboBox.addItem(new Toad());
+		figureComboBox.addItem(new Pulsar());
+		figureComboBox.addItem(new GliderGun());
+		JLabel figureLabel = new JLabel("Figure");
+		verticalBox.add(figureLabel);
+		figureLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		verticalBox.add(figureComboBox);
+
 		JButton btnGenerateGrid = new JButton("Generate grid");
 		btnGenerateGrid.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				generateField();
+				try {
+					Figure f = (Figure) figureComboBox.getSelectedItem();
+					int rows = Integer.parseInt(rowInput.getText());
+					int columns = Integer.parseInt(columnInput.getText());
+					if (rows < f.rows) {
+						rowInput.setText(String.valueOf(f.rows));
+						rows = f.rows;
+					}
+					if (columns < f.columns) {
+						columnInput.setText(String.valueOf(f.columns));
+						columns = f.columns;
+					}
+					generateField();
+					boolean[][] field = f.getField(columns, rows);
+					for (int x = 0; x < game.getField().getColumnCount(); x++) {
+						for (int y = 0; y < game.getField().getRowCount(); y++) {
+							cells[x][y].setAlive(field[x][y]);
+							game.getField().setAlive(x, y,
+									cells[x][y].isAlive());
+						}
+					}
+				} catch (NumberFormatException nfe) {
+					// Do nothing
+				}
 			}
 		});
+
+		Component verticalStrut_13 = Box.createVerticalStrut(10);
+		verticalBox.add(verticalStrut_13);
 		getRootPane().setDefaultButton(btnGenerateGrid);
 		verticalBox.add(btnGenerateGrid);
 		JPanel buttonPanel = new JPanel();
@@ -334,126 +375,10 @@ public class GUI extends JFrame {
 		displayCellsAlive(0);
 		buttonPanel.add(lblCellsAlive);
 
-		JPanel extraPanel = new JPanel();
-		contentPane.add(extraPanel, BorderLayout.EAST);
-
-		Box FiguresBox = Box.createVerticalBox();
-		extraPanel.add(FiguresBox);
-
-		JLabel figureLabel = new JLabel("Figures");
-		figureLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		FiguresBox.add(figureLabel);
-
-		Component verticalStrut_11 = Box.createVerticalStrut(5);
-		FiguresBox.add(verticalStrut_11);
-
-		JComboBox<Figure> figureComboBox = new JComboBox<Figure>();
-		figureComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-		figureComboBox.addItem(new Glider());
-		figureComboBox.addItem(new Blinker());
-		figureComboBox.addItem(new Toad());
-		figureComboBox.addItem(new Pulsar());
-		figureComboBox.addItem(new GliderGun());
-		// figureComboBox.addItem(new CircleOfFire());
-		FiguresBox.add(figureComboBox);
-
-		JButton createFigureButton = new JButton("Create");
-		createFigureButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					Figure f = (Figure) figureComboBox.getSelectedItem();
-					int rows = Integer.parseInt(rowInput.getText());
-					int columns = Integer.parseInt(columnInput.getText());
-					if (rows < f.rows) {
-						rowInput.setText(String.valueOf(f.rows));
-						rows = f.rows;
-					}
-					if (columns < f.columns) {
-						columnInput.setText(String.valueOf(f.columns));
-						columns = f.columns;
-					}
-					generateField();
-					boolean[][] field = f.getField(columns, rows);
-					for (int x = 0; x < game.getField().getColumnCount(); x++) {
-						for (int y = 0; y < game.getField().getRowCount(); y++) {
-							cells[x][y].setAlive(field[x][y]);
-							game.getField().setAlive(x, y,
-									cells[x][y].isAlive());
-						}
-					}
-				} catch (NumberFormatException nfe) {
-					// Do nothing
-				}
-			}
-		});
-
-		Component verticalStrut_12 = Box.createVerticalStrut(5);
-		FiguresBox.add(verticalStrut_12);
-		FiguresBox.add(createFigureButton);
-
-		Component verticalStrut_13 = Box.createVerticalStrut(10);
-		FiguresBox.add(verticalStrut_13);
-
-		JLabel lblNewLabel = new JLabel("Gyro controls");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		FiguresBox.add(lblNewLabel);
-
-		Component verticalStrut_14 = Box.createVerticalStrut(5);
-		FiguresBox.add(verticalStrut_14);
-
-		JLabel lblXAngle = new JLabel("X angle");
-		FiguresBox.add(lblXAngle);
-
-		Box horizontalBox_1 = Box.createHorizontalBox();
-		horizontalBox_1.setAlignmentX(Component.LEFT_ALIGNMENT);
-		FiguresBox.add(horizontalBox_1);
-
-		JLabel lblXValue = new JLabel("0");
-		xAngleSlider = new JSlider();
-		xAngleSlider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				lblXValue.setText(String.valueOf(xAngleSlider.getValue()));
-			}
-		});
-		horizontalBox_1.add(xAngleSlider);
-		xAngleSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
-		xAngleSlider.setMaximum(180);
-		xAngleSlider.setMinimum(-180);
-		xAngleSlider.setValue(0);
-
-		horizontalBox_1.add(lblXValue);
-
-		Component verticalStrut_16 = Box.createVerticalStrut(5);
-		FiguresBox.add(verticalStrut_16);
-
-		JLabel lblYAngle = new JLabel("Y angle");
-		FiguresBox.add(lblYAngle);
-
-		Box horizontalBox_2 = Box.createHorizontalBox();
-		horizontalBox_2.setAlignmentX(Component.LEFT_ALIGNMENT);
-		FiguresBox.add(horizontalBox_2);
-
-		JLabel lblYValue = new JLabel("0");
-		yAngleSlider = new JSlider();
-		yAngleSlider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				lblYValue.setText(String.valueOf(yAngleSlider.getValue()));
-			}
-
-		});
-		horizontalBox_2.add(yAngleSlider);
-		yAngleSlider.setMinimum(-180);
-		yAngleSlider.setMaximum(180);
-		yAngleSlider.setValue(0);
-		yAngleSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		horizontalBox_2.add(lblYValue);
-
 		this.pack();
 		this.setLocationRelativeTo(null);
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+//		this.setUndecorated(true);
 		playMusic();
 	}
 
@@ -580,7 +505,7 @@ public class GUI extends JFrame {
 			gyroRuleThread.interrupt();
 			gyroRuleThread = null;
 		}
-		updateGridTotally(game.getField());
+//		updateGridTotally(game.getField());
 	}
 
 	public Color getAliveColor() {
