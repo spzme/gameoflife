@@ -69,8 +69,8 @@ public class GUI extends JFrame {
 	private JLabel lblCellsAlive;
 	private JLabel lblGenerationCounter;
 
-	private static final int ROW_BOUNDS = 100;
-	private static final int COLUMN_BOUNDS = 100;
+	private static final int ROW_BOUNDS = 40;
+	private static final int COLUMN_BOUNDS = 40;
 
 	// Check for movements 4 times per second.
 	private static final int GYRO_RULE_FREQ = 4;
@@ -204,7 +204,7 @@ public class GUI extends JFrame {
 		speedSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
 		horizontalBox.add(speedSlider);
 		speedSlider.setMinimum(1);
-		speedSlider.setMaximum(50);
+		speedSlider.setMaximum(20);
 		speedSlider.setValue(1);
 		speedSlider.addChangeListener(new ChangeListener() {
 			@Override
